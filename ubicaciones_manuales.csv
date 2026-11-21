@@ -1,0 +1,5 @@
+# Ubicaciones manuales para barras que no se pueden cruzar con Infotécnica.
+# Se aplican al ejecutar: python -m nodos geo
+# Lista de pendientes (ordenada por energía): data/ref/barras_sin_ubicar.csv
+# lat/lon en grados decimales (WGS84), p. ej. -22.95,-69.05. Indica de dónde sacaste el dato en "fuente".
+barra,lat,lon,fuente

@@ -1,0 +1,21 @@
+services:
+  nodos:
+    build: .
+    image: nodos-sen:latest
+    container_name: nodos
+    ports:
+      - "8000:8000"
+    # CEN_SIP_USER_KEY va en .env (copia .env.example). Nunca la subas a GitHub.
+    env_file: .env
+    environment:
+      NODOS_ACTUALIZAR_CADA_HORAS: "6"
+      NODOS_DIAS_PRONOSTICO: "3"
+      NODOS_DIAS_DEMANDA_NETA: "14"
+      NODOS_DIAS_CMG: "14"
+      NODOS_DIAS_DEMANDA: "7"
+    volumes:
+      - nodos-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  nodos-data:

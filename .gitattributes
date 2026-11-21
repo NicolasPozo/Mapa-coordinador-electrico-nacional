@@ -1,0 +1,4 @@
+# Finales de línea LF en el repositorio y en la imagen Docker (Linux), también al clonar en Windows.
+* text=auto eol=lf
+*.parquet binary
+*.duckdb binary

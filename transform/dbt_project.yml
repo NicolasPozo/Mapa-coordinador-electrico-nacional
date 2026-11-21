@@ -1,0 +1,26 @@
+name: nodos
+version: "0.1.0"
+config-version: 2
+profile: nodos
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+seed-paths: ["seeds"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+# La raíz del proyecto Nodos (donde está data/) llega en la variable de entorno
+# NODOS_RAIZ (la fija `python -m nodos dbt`); por defecto '..' respecto de transform/.
+vars:
+  # Mínimo de energía demandada que debe quedar ubicada en el mapa, por día.
+  cobertura_minima: 0.90
+
+models:
+  nodos:
+    staging:
+      +materialized: view
+      +schema: limpio
+    marts:
+      +materialized: table
+      +schema: modelo

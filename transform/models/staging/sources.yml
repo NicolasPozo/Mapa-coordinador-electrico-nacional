@@ -1,0 +1,41 @@
+version: 2
+
+# Capa raw: los Parquet tal como los guardan `python -m nodos descargar` y `python -m nodos geo`.
+# DuckDB los lee en su lugar (sin copiarlos) con read_parquet.
+
+sources:
+  - name: sip
+    description: API SIP del Coordinador Eléctrico Nacional. Un Parquet por día en data/raw/<endpoint>/.
+    tables:
+      - name: demanda_real
+        description: Retiros horarios por barra, suministrador y cliente (kWh, retiros con signo negativo).
+        meta:
+          external_location: "read_parquet('{{ env_var('NODOS_RAIZ', '..') }}/data/raw/demanda-real/*.parquet', union_by_name = true)"
+      - name: cmg_real
+        description: Costo marginal real por barra cada 15 minutos.
+        meta:
+          external_location: "read_parquet('{{ env_var('NODOS_RAIZ', '..') }}/data/raw/cmg-real/*.parquet', union_by_name = true)"
+      - name: pronostico
+        description: Pronóstico de demanda de corto plazo por barra y hora.
+        meta:
+          external_location: "read_parquet('{{ env_var('NODOS_RAIZ', '..') }}/data/raw/pronostico/*.parquet', union_by_name = true)"
+      - name: demanda_neta
+        description: Demanda neta horaria del sistema.
+        meta:
+          external_location: "read_parquet('{{ env_var('NODOS_RAIZ', '..') }}/data/raw/demanda-neta/*.parquet', union_by_name = true)"
+
+  - name: infotecnica
+    description: Catálogo técnico del CEN (api-infotecnica.coordinador.cl), guardado por `python -m nodos geo`.
+    tables:
+      - name: barras
+        meta:
+          external_location: "read_parquet('{{ env_var('NODOS_RAIZ', '..') }}/data/ref/infotecnica_barras.parquet')"
+      - name: subestaciones
+        meta:
+          external_location: "read_parquet('{{ env_var('NODOS_RAIZ', '..') }}/data/ref/infotecnica_subestaciones.parquet')"
+      - name: nodos_geo
+        description: >
+          Cruce código SIP -> barra Infotécnica -> subestación -> coordenadas, calculado en Python
+          (por id, por nombre con abreviaturas y manual desde ubicaciones_manuales.csv).
+        meta:
+          external_location: "read_parquet('{{ env_var('NODOS_RAIZ', '..') }}/data/processed/nodos.parquet')"

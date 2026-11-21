@@ -1,0 +1,8 @@
+nodos:
+  target: local
+  outputs:
+    local:
+      type: duckdb
+      # NODOS_DUCKDB permite construir en una base temporal (la usa `python -m nodos actualizar`).
+      path: "{{ env_var('NODOS_DUCKDB', env_var('NODOS_RAIZ', '..') ~ '/data/nodos.duckdb') }}"
+      threads: 4

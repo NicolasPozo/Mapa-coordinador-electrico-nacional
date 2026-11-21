@@ -1,0 +1,18 @@
+# Secretos: nunca subir la clave de la API
+.env
+
+# Python
+__pycache__/
+.venv/
+.venv-dbt/
+
+# dbt
+transform/target/
+transform/logs/
+transform/dbt_packages/
+transform/.user.yml
+*.pyc
+
+# Datos descargados y generados
+data/
+salida/

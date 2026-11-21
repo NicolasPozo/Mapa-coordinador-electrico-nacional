@@ -1,0 +1,88 @@
+version: 2
+
+models:
+  - name: stg_demanda_real
+    description: >
+      Retiros por barra, suministrador, cliente y hora, en MWh positivos. No tiene clave única:
+      un cliente puede tener varios medidores en la misma barra y la API no trae su id.
+    data_tests:
+      - fila_en_su_dia
+    columns:
+      - name: barra
+        data_tests: [not_null]
+      - name: fecha_hora
+        data_tests: [not_null]
+      - name: demanda_mwh
+        data_tests: [not_null]
+      - name: tipo
+        description: R = cliente regulado, L / L_D = clientes libres.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['R', 'L', 'L_D']
+              config:
+                severity: warn
+
+  - name: stg_cmg_real
+    description: Costo marginal real cada 15 minutos por barra.
+    data_tests:
+      - unico_combinado:
+          arguments:
+            columnas: [barra, fecha_minuto]
+    columns:
+      - name: barra
+        data_tests: [not_null]
+      - name: fecha_minuto
+        data_tests: [not_null]
+      - name: cmg_usd_mwh
+        data_tests:
+          - not_null
+          - entre:
+              arguments:
+                minimo: 0
+                maximo: 2000
+
+  - name: stg_pronostico
+    description: Pronóstico horario por barra (última emisión).
+    data_tests:
+      - unico_combinado:
+          arguments:
+            columnas: [barra, fecha_hora]
+    columns:
+      - name: energia_mwh
+        data_tests: [not_null]
+
+  - name: stg_demanda_neta
+    columns:
+      - name: fecha_hora
+        data_tests: [not_null, unique]
+
+  - name: stg_infotecnica_barras
+    columns:
+      - name: id_barra_info
+        data_tests: [not_null, unique]
+      - name: id_subestacion
+        data_tests: [not_null]
+
+  - name: stg_infotecnica_subestaciones
+    columns:
+      - name: id_subestacion
+        data_tests: [not_null, unique]
+
+  - name: stg_nodos_geo
+    columns:
+      - name: barra
+        data_tests: [not_null, unique]
+      - name: lat
+        data_tests:
+          - entre:
+              arguments: {minimo: -56.5, maximo: -17}
+      - name: lon
+        data_tests:
+          - entre:
+              arguments: {minimo: -76.5, maximo: -66}
+      - name: metodo_cruce
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['id', 'nombre', 'manual']

@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nodos del SEN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: Chile es largo y angosto -> mapa alto a la izquierda, panel de lectura a la derecha; en teléfono se apilan. */
+:root {
+  --bg: #EDF1EF;
+  --surface: #F8FAF9;
+  --ink: #17201E;
+  --muted: #5A6A66;
+  --line: #D2DBD7;
+  --sea: #DCE5E6;
+  --land: #E3E8E5;
+  --land-cl: #FBFCFB;
+  --border: #A7B4B0;
+  --accent: #A85A22;          /* cobre: el conductor de la red */
+  --accent-soft: #A85A2222;
+  --p0: #1C7486;              /* costo marginal bajo */
+  --p1: #DDAE3F;              /* medio */
+  --p2: #B03F2B;              /* alto */
+  --ok: #2F7D4F;
+  --warn: #B07A12;
+  --bad: #B03F2B;
+  --halo: #FFFFFFCC;
+  --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1514; --surface: #151D1B; --ink: #E4EBE8; --muted: #91A29D; --line: #26322E;
+    --sea: #0B1110; --land: #1A2321; --land-cl: #22302C; --border: #3D4C47;
+    --accent: #DB8D52; --accent-soft: #DB8D5233;
+    --p0: #3AA3B6; --p1: #E7C25E; --p2: #E26A50; --ok: #5DBB83; --warn: #E0B04A; --bad: #E26A50; --halo: #0F1514CC;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1514; --surface: #151D1B; --ink: #E4EBE8; --muted: #91A29D; --line: #26322E;
+  --sea: #0B1110; --land: #1A2321; --land-cl: #22302C; --border: #3D4C47;
+  --accent: #DB8D52; --accent-soft: #DB8D5233;
+  --p0: #3AA3B6; --p1: #E7C25E; --p2: #E26A50; --ok: #5DBB83; --warn: #E0B04A; --bad: #E26A50; --halo: #0F1514CC;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 14px; line-height: 1.45; }
+[hidden] { display: none !important; }
+.app {
+  height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 12px;
+  padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+header.top { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 10px 24px; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: 26px; letter-spacing: -0.01em; margin: 0; line-height: 1.1; text-wrap: balance; }
+.sub { margin: 4px 0 0; color: var(--muted); display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.sub b { color: var(--ink); font-weight: 500; }
+.controles { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.modos { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; padding: 3px; background: var(--surface); gap: 2px; flex-wrap: wrap; }
+.modos button { font: 500 13px var(--font-body); color: var(--muted); background: transparent; border: 0; border-radius: 6px; padding: 7px 12px; cursor: pointer; }
+.modos button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+select {
+  font: 500 13px var(--font-body); color: var(--ink); background: var(--surface); border: 1px solid var(--line);
+  border-radius: 8px; padding: 8px 10px; cursor: pointer; max-width: 100%;
+}
+.modos button:focus-visible, .btn:focus-visible, select:focus-visible, input[type=range]:focus-visible, .fila:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.estado { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.estado i { width: 8px; height: 8px; border-radius: 50%; background: var(--border); display: inline-block; }
+.estado.ok i { background: var(--ok); }
+.estado.curso i { background: var(--warn); animation: pulso 1.4s ease-in-out infinite; }
+.estado.error i { background: var(--bad); }
+@keyframes pulso { 50% { opacity: 0.35; } }
+
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 380px); gap: 14px; min-height: 0; }
+.mapa-wrap { position: relative; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--sea); }
+#mapa { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+#mapa:active { cursor: grabbing; }
+.pais { fill: var(--land); stroke: var(--border); stroke-width: 0.6; vector-effect: non-scaling-stroke; }
+.pais.CHL { fill: var(--land-cl); }
+.nodo { stroke: var(--halo); stroke-width: 1; vector-effect: non-scaling-stroke; cursor: pointer; }
+.nodo.sel { stroke: var(--ink); stroke-width: 2.2; }
+.punto { stroke: none; pointer-events: none; }
+.zonas { position: absolute; top: 10px; left: 10px; display: flex; gap: 4px; flex-wrap: wrap; }
+.btn { font: 500 12px var(--font-body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 5px 9px; cursor: pointer; }
+.btn:hover { border-color: var(--border); }
+.btn.on { border-color: var(--accent); color: var(--accent); }
+.aviso {
+  position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center;
+  background: color-mix(in srgb, var(--sea) 85%, transparent);
+}
+.aviso div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; max-width: 360px; }
+.aviso strong { display: block; font: 700 16px var(--font-display); margin-bottom: 4px; }
+.aviso p { margin: 0; color: var(--muted); }
+
+.leyenda {
+  position: absolute; left: 10px; bottom: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 10px; display: grid; gap: 6px; font-size: 12px; color: var(--muted); max-width: calc(100% - 20px);
+}
+.leyenda .t { color: var(--ink); font-weight: 500; }
+.rampa { height: 8px; width: 170px; max-width: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--p0), var(--p1), var(--p2)); }
+.rampa-ejes { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; }
+.tamanos { display: flex; align-items: end; gap: 10px; }
+.tamanos span { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; font-family: var(--font-mono); font-size: 11px; }
+.tamanos i { display: block; border-radius: 50%; border: 1px solid var(--muted); }
+
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 4px 16px #0002; min-width: 160px; z-index: 2; }
+.tip strong { display: block; font-size: 13px; }
+.tip .k { color: var(--muted); }
+
+aside.panel { min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 14px; }
+.bloque { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.hora { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; }
+.hora output { font: 500 22px var(--font-mono); font-variant-numeric: tabular-nums; min-width: 4.2ch; text-align: right; }
+#play { width: 34px; height: 34px; padding: 0; display: grid; place-items: center; font-size: 14px; }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+.etiqueta { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
+.kpi .v { font: 500 22px var(--font-mono); font-variant-numeric: tabular-nums; }
+.kpi .v small { font: 400 12px var(--font-body); color: var(--muted); margin-left: 3px; }
+.kpi .n { font-size: 12px; color: var(--muted); }
+#curva { display: block; width: 100%; height: 110px; overflow: visible; }
+#curva text, .mini text { fill: var(--muted); font: 10px var(--font-mono); }
+.eje line, .eje path { stroke: var(--line); }
+.lista { display: grid; gap: 2px; margin-top: 8px; }
+.fila { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 6px; border-radius: 6px; cursor: pointer; background: none; border: 0; text-align: left; font: inherit; color: inherit; width: 100%; }
+.fila:hover { background: var(--accent-soft); }
+.fila .nombre { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fila .nombre small { color: var(--muted); margin-left: 4px; }
+.fila .val { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.detalle h2 { font: 700 18px var(--font-display); margin: 2px 0; text-wrap: balance; }
+.detalle .meta { color: var(--muted); font-size: 12px; }
+.barras { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.barras code { font: 11px var(--font-mono); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
+.mini { display: block; width: 100%; height: 90px; overflow: visible; margin-top: 4px; }
+.cab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.nota { font-size: 12px; color: var(--muted); margin: 0; }
+.fuente { font-size: 11px; color: var(--muted); margin: 0; }
+
+@media (max-width: 860px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .mapa-wrap { height: 72vh; min-height: 420px; }
+  aside.panel { overflow: visible; }
+  h1 { font-size: 22px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div>
+      <h1>Nodos del Sistema Eléctrico Nacional</h1>
+      <p class="sub"><span id="sub">Cargando datos…</span><span class="estado" id="estado" title=""><i></i><span id="estado-txt"></span></span></p>
+    </div>
+    <div class="controles">
+      <label for="dia" class="etiqueta" style="position:absolute;left:-9999px">Día</label>
+      <select id="dia" aria-label="Día" disabled></select>
+      <div class="modos" role="tablist" aria-label="Qué mostrar">
+        <button role="tab" id="m-demanda" aria-selected="true" data-modo="demanda">Demanda y precio</button>
+        <button role="tab" id="m-precio" aria-selected="false" data-modo="precio">Costo marginal</button>
+        <button role="tab" id="m-pron" aria-selected="false" data-modo="pron">Pronóstico</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="mapa-wrap" aria-label="Mapa de subestaciones">
+      <svg id="mapa" role="img" aria-label="Mapa de Chile con las subestaciones del SEN"></svg>
+      <div class="zonas" role="group" aria-label="Acercar a una zona">
+        <button class="btn on" data-zona="todo">Todo</button>
+        <button class="btn" data-zona="norte">Norte</button>
+        <button class="btn" data-zona="centro">Centro</button>
+        <button class="btn" data-zona="santiago">Santiago</button>
+        <button class="btn" data-zona="sur">Sur</button>
+      </div>
+      <div class="leyenda" id="leyenda"></div>
+      <div class="tip" id="tip" hidden></div>
+      <div class="aviso" id="aviso" hidden><div><strong id="aviso-t">Preparando datos</strong><p id="aviso-p"></p></div></div>
+    </section>
+
+    <aside class="panel">
+      <div class="bloque">
+        <div class="hora">
+          <button class="btn" id="play" aria-label="Reproducir las 24 horas">▶</button>
+          <input type="range" id="hora" min="0" max="23" step="1" value="12" aria-label="Hora del día">
+          <output id="hora-txt" for="hora">12:00</output>
+        </div>
+      </div>
+      <div class="bloque">
+        <div class="kpis" id="kpis"></div>
+        <svg id="curva" aria-label="Curva diaria del sistema"></svg>
+        <p class="nota" id="nota-curva"></p>
+      </div>
+      <div class="bloque" id="caja"></div>
+      <p class="fuente">Fuente: Coordinador Eléctrico Nacional (CEN) - Datos Abiertos (API SIP e Infotécnica). Cada punto es una subestación; su demanda suma los retiros de todas sus barras.</p>
+    </aside>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+// Exportación estática (python -m nodos mapa) incrusta aquí {dias, mapa, pron, base, estado}.
+// Servido por la app (python -m nodos servir), queda en null y los datos llegan de la API.
+const EMBEBIDO = /*__DATOS__*/null;
+
+(function () {
+  // ---------- utilidades ----------
+  const nf = (d) => new Intl.NumberFormat('es-CL', { maximumFractionDigits: d, minimumFractionDigits: d });
+  const f0 = nf(0).format;
+  const fmt = (v, dec) => v == null ? '—' : nf(dec).format(v);
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const fecha = (iso, corto) => iso ? new Date(iso + 'T12:00:00').toLocaleDateString('es-CL', corto
+    ? { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }
+    : { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '—';
+  const fechaHora = (iso) => iso ? new Date(iso).toLocaleString('es-CL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
+  const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const hh = (h) => String(h).padStart(2, '0') + ':00';
+  const reducir = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  async function api(ruta) {
+    const r = await fetch(ruta, { cache: 'no-store' });
+    if (!r.ok) {
+      let detalle = r.statusText;
+      try { detalle = (await r.json()).detail || detalle; } catch (_) {}
+      const e = new Error(detalle); e.status = r.status; throw e;
+    }
+    return r.json();
+  }
+
+  // ---------- estado ----------
+  let modo = 'demanda', hora = 12, sel = null, timer = null;
+  let DATOS = null, PRON = null, BASE = null, DIAS = null, ESTADO = null;
+  let diaDemanda = null, diaPron = null;
+  let color, radio, pMax = 120, dMax = 1, fMax = 1;
+
+  // ---------- mapa ----------
+  const svg = d3.select('#mapa');
+  const g = svg.append('g');
+  const gPaises = g.append('g');
+  const gPuntos = g.append('g');
+  const gNodos = g.append('g');
+  const proyeccion = d3.geoMercator();
+  const path = d3.geoPath(proyeccion);
+  const ZONAS = {
+    todo: [[-76.2, -17.3], [-66.0, -44.2]],
+    norte: [[-71.2, -17.4], [-67.0, -27.5]],
+    centro: [[-72.6, -27.5], [-69.8, -36.5]],
+    santiago: [[-71.3, -33.15], [-70.3, -33.85]],
+    sur: [[-74.4, -36.3], [-71.0, -43.6]],
+  };
+  const caja = (z) => ({ type: 'Feature', geometry: { type: 'Polygon', coordinates: [[z[0], [z[1][0], z[0][1]], z[1], [z[0][0], z[1][1]], z[0]]] } });
+  let ancho = 0, alto = 0, k = 1;
+
+  const zoom = d3.zoom().scaleExtent([1, 40]).on('zoom', (e) => { g.attr('transform', e.transform); k = e.transform.k; tamanos(); });
+  svg.call(zoom).on('dblclick.zoom', null);
+  const xy = (d) => proyeccion([d.lo, d.la]);
+
+  function ajustar() {
+    const r = svg.node().getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    ancho = r.width; alto = r.height;
+    svg.attr('viewBox', `0 0 ${ancho} ${alto}`);
+    proyeccion.fitExtent([[12, 48], [ancho - 12, alto - 12]], caja(ZONAS.todo));
+    gPaises.selectAll('path').attr('d', path);
+    g.selectAll('circle').attr('cx', d => xy(d)[0]).attr('cy', d => xy(d)[1]);
+    zoom.translateExtent([[-ancho, -alto], [ancho * 2, alto * 2]]);
+  }
+
+  function irA(nombre, animar = true) {
+    const z = ZONAS[nombre];
+    const [[x0, y0], [x1, y1]] = [proyeccion(z[0]), proyeccion(z[1])];
+    const s = Math.min(40, 0.92 / Math.max((x1 - x0) / ancho, (y1 - y0) / (alto - 40)));
+    const t = d3.zoomIdentity.translate(ancho / 2, (alto + 36) / 2).scale(s).translate(-(x0 + x1) / 2, -(y0 + y1) / 2);
+    (animar && !reducir() ? svg.transition().duration(650) : svg).call(zoom.transform, t);
+    document.querySelectorAll('[data-zona]').forEach(b => b.classList.toggle('on', b.dataset.zona === nombre));
+  }
+  document.querySelectorAll('[data-zona]').forEach(b => b.addEventListener('click', () => irA(b.dataset.zona)));
+
+  // ---------- escalas ----------
+  function escalas() {
+    const precios = (DATOS?.nodos || []).flatMap(n => n.p || []).filter(v => v != null).sort(d3.ascending);
+    pMax = Math.max(60, d3.quantile(precios, 0.97) || 120);
+    color = d3.scaleLinear().domain([0, pMax * 0.45, pMax]).range([css('--p0'), css('--p1'), css('--p2')]).clamp(true).interpolate(d3.interpolateLab);
+    dMax = d3.max((DATOS?.nodos || []).flatMap(n => n.d || []).filter(v => v != null)) || 1;
+    fMax = d3.max((PRON?.nodos || []).flatMap(n => n.f || []).filter(v => v != null)) || 1;
+    radio = d3.scaleSqrt().domain([0, Math.max(dMax, fMax)]).range([0, 26]);
+  }
+
+  const tip = document.getElementById('tip');
+  function mostrarTip(e, d) {
+    const wrap = svg.node().parentNode.getBoundingClientRect();
+    const filas = [];
+    if (modo === 'pron') filas.push(`<span class="k">Pronóstico</span> ${fmt(d.f?.[hora], 1)} MWh`);
+    else {
+      if (d.d) filas.push(`<span class="k">Demanda</span> ${fmt(d.d[hora], 1)} MWh`);
+      if (d.p) filas.push(`<span class="k">Costo marginal</span> ${fmt(d.p[hora], 1)} USD/MWh`);
+    }
+    tip.innerHTML = `<strong>${esc(d.n)}</strong><span class="k">${esc(d.c)}</span><br>${filas.join('<br>')}`;
+    tip.hidden = false;
+    const x = e.clientX - wrap.left + 14, y = e.clientY - wrap.top + 14;
+    tip.style.left = Math.min(x, wrap.width - tip.offsetWidth - 8) + 'px';
+    tip.style.top = Math.min(y, wrap.height - tip.offsetHeight - 8) + 'px';
+  }
+
+  const lista = () => (modo === 'pron' ? PRON?.nodos : DATOS?.nodos) || [];
+  function valor(d) {
+    if (modo === 'pron') return d.f?.[hora] ?? null;
+    if (modo === 'precio') return d.p?.[hora] ?? null;
+    return d.d?.[hora] ?? null;
+  }
+
+  function dibujar() {
+    if (!ancho) return;
+    const ctx = modo === 'pron' ? [] : (DATOS?.nodos || []).filter(n => n.p);
+    gPuntos.selectAll('circle').data(ctx, d => d.id).join('circle').attr('class', 'punto')
+      .attr('cx', d => xy(d)[0]).attr('cy', d => xy(d)[1]);
+    let datos = lista().filter(d => valor(d) != null);
+    if (modo !== 'precio') datos = datos.filter(d => valor(d) > 0).sort((a, b) => valor(b) - valor(a));
+    gNodos.selectAll('circle').data(datos, d => modo + d.id).join(
+      enter => enter.append('circle').attr('class', 'nodo')
+        .on('pointerenter pointermove', mostrarTip).on('pointerleave', () => { tip.hidden = true; })
+        .on('click', (e, d) => { e.stopPropagation(); seleccionar(d); })
+    ).attr('cx', d => xy(d)[0]).attr('cy', d => xy(d)[1]).classed('sel', d => sel && d.id === sel.id);
+    tamanos();
+    panel();
+  }
+
+  function tamanos() {
+    if (!color) return;
+    const f = 1 / Math.pow(k, 0.75);
+    gPuntos.selectAll('circle').attr('r', 1.6 * f).attr('fill', d => d.p?.[hora] != null ? color(d.p[hora]) : css('--border')).attr('opacity', modo === 'demanda' ? 0.55 : 0);
+    gNodos.selectAll('circle')
+      .attr('r', d => (modo === 'precio' ? 4.2 : Math.max(2.2, radio(valor(d)))) * f)
+      .attr('fill', d => modo === 'pron' ? css('--accent') : (d.p?.[hora] != null ? color(d.p[hora]) : css('--border')))
+      .attr('fill-opacity', modo === 'pron' ? 0.55 : 0.88);
+  }
+
+  // ---------- panel ----------
+  function leyenda() {
+    const L = document.getElementById('leyenda');
+    if (!radio) { L.innerHTML = ''; return; }
+    const tam = (v) => `<span><i style="width:${2 * radio(v)}px;height:${2 * radio(v)}px"></i>${f0(v)}</span>`;
+    const pasos = [10, 100, 400].filter(v => v <= Math.max(dMax, fMax) * 1.2);
+    const tams = `<div><div class="t">${modo === 'pron' ? 'Pronóstico' : 'Demanda'} por hora (MWh)</div><div class="tamanos">${pasos.map(tam).join('')}</div></div>`;
+    const rampa = `<div><div class="t">Costo marginal (USD/MWh)</div><div class="rampa"></div><div class="rampa-ejes"><span>0</span><span>${f0(pMax * 0.45)}</span><span>${f0(pMax)}+</span></div></div>`;
+    L.innerHTML = modo === 'demanda' ? tams + rampa : modo === 'precio' ? rampa : tams;
+  }
+
+  function curva(svgSel, y, opciones = {}) {
+    const el = svgSel.node();
+    const w = el.getBoundingClientRect().width || 300, h = el.getBoundingClientRect().height || 100;
+    const m = { t: 8, r: 6, b: 18, l: 38 };
+    svgSel.attr('viewBox', `0 0 ${w} ${h}`).selectAll('*').remove();
+    const vals = (y || []).map((v, i) => ({ i, v })).filter(p => p.v != null);
+    if (!vals.length) { svgSel.append('text').attr('x', 0).attr('y', h / 2).text('Sin datos'); return; }
+    const x = d3.scaleLinear().domain([0, 23]).range([m.l, w - m.r]);
+    const yy = d3.scaleLinear().domain([Math.min(0, d3.min(vals, p => p.v)), d3.max(vals, p => p.v) || 1]).nice(3).range([h - m.b, m.t]);
+    svgSel.append('g').attr('class', 'eje').attr('transform', `translate(0,${h - m.b})`)
+      .call(d3.axisBottom(x).tickValues([0, 6, 12, 18, 23]).tickFormat(v => String(v).padStart(2, '0')).tickSize(3));
+    svgSel.append('g').attr('class', 'eje').attr('transform', `translate(${m.l},0)`)
+      .call(d3.axisLeft(yy).ticks(3).tickFormat(v => nf(0).format(v)).tickSize(-(w - m.l - m.r)))
+      .call(s => s.select('.domain').remove()).call(s => s.selectAll('.tick line').attr('stroke-opacity', 0.6));
+    const c = opciones.color || css('--accent');
+    if (opciones.barras) {
+      svgSel.append('g').selectAll('rect').data(vals).join('rect')
+        .attr('x', p => x(p.i) - 3).attr('width', 6).attr('y', p => yy(Math.max(0, p.v))).attr('height', p => Math.abs(yy(p.v) - yy(0)))
+        .attr('fill', p => p.i === hora ? c : css('--border')).attr('rx', 1.5);
+      return;
+    }
+    svgSel.append('path').datum(vals).attr('fill', c).attr('fill-opacity', 0.14)
+      .attr('d', d3.area().x(p => x(p.i)).y0(yy(Math.max(0, yy.domain()[0]))).y1(p => yy(p.v)).curve(d3.curveMonotoneX));
+    svgSel.append('path').datum(vals).attr('fill', 'none').attr('stroke', c).attr('stroke-width', 1.8)
+      .attr('d', d3.line().x(p => x(p.i)).y(p => yy(p.v)).curve(d3.curveMonotoneX));
+    svgSel.append('line').attr('x1', x(hora)).attr('x2', x(hora)).attr('y1', m.t).attr('y2', h - m.b).attr('stroke', css('--ink')).attr('stroke-opacity', 0.35).attr('stroke-dasharray', '2 3');
+    const actual = vals.find(p => p.i === hora);
+    if (actual) svgSel.append('circle').attr('cx', x(hora)).attr('cy', yy(actual.v)).attr('r', 3.5).attr('fill', c).attr('stroke', css('--surface')).attr('stroke-width', 1.5);
+  }
+
+  function panel() {
+    document.getElementById('hora-txt').textContent = hh(hora);
+    const kp = [];
+    let serie, nombre, unidad;
+    if (modo === 'pron') {
+      const f = PRON?.sistema.f || [];
+      kp.push(['Pronóstico a las ' + hh(hora), fmt(f[hora], 0), 'MWh', `${PRON?.nodos.length ?? 0} subestaciones`]);
+      kp.push(['Total del día', fmt(d3.sum(f), 0), 'MWh', 'barras pronosticadas por el CEN']);
+      serie = f; nombre = 'Pronóstico de las barras pronosticadas'; unidad = 'MWh';
+    } else {
+      const s = DATOS?.sistema || { d: [], p: [] };
+      const cob = DATOS?.cobertura || {};
+      kp.push(['Demanda a las ' + hh(hora), fmt(s.d[hora], 0), 'MWh', 'todo el sistema']);
+      kp.push(['Costo marginal medio', fmt(s.p[hora], 1), 'USD/MWh', 'ponderado por demanda']);
+      kp.push(['Energía del día', fmt(d3.sum(s.d) / 1000, 1), 'GWh', 'retiros de clientes']);
+      kp.push(['Ubicada en el mapa', cob.energia != null ? f0(cob.energia * 100) + '%' : '—', '', `${cob.barras_ubicadas ?? 0} de ${cob.barras_total ?? 0} barras`]);
+      if (modo === 'precio') { serie = s.p; nombre = 'Costo marginal medio ponderado por demanda'; unidad = 'USD/MWh'; }
+      else { serie = s.d; nombre = 'Demanda total del sistema'; unidad = 'MWh'; }
+    }
+    document.getElementById('kpis').innerHTML = kp.map(([n, v, u, d]) =>
+      `<div class="kpi"><div class="etiqueta">${n}</div><div class="v">${v}<small>${u}</small></div><div class="n">${d}</div></div>`).join('');
+    curva(d3.select('#curva'), serie, { color: modo === 'precio' && color ? color(DATOS?.sistema.p[hora] ?? 0) : css('--accent') });
+    document.getElementById('nota-curva').textContent = `${nombre} por hora (${unidad}).`;
+    if (sel) detalle(); else ranking();
+  }
+
+  function ranking() {
+    const datos = lista().filter(d => valor(d) != null);
+    let titulo, filas;
+    if (modo === 'precio') {
+      const orden = datos.slice().sort((a, b) => valor(b) - valor(a));
+      filas = orden.slice(0, 5).concat(orden.slice(-3).reverse().filter(d => !orden.slice(0, 5).includes(d)));
+      titulo = `Precios más altos y más bajos a las ${hh(hora)}`;
+    } else {
+      filas = datos.slice().sort((a, b) => valor(b) - valor(a)).slice(0, 8);
+      titulo = `${modo === 'pron' ? 'Mayor pronóstico' : 'Mayor demanda'} a las ${hh(hora)}`;
+    }
+    const caja = document.getElementById('caja');
+    caja.className = 'bloque';
+    caja.innerHTML = `<div class="cab"><div class="etiqueta">${titulo}</div><span class="etiqueta">${modo === 'precio' ? 'USD/MWh' : 'MWh'}</span></div>
+      <div class="lista">${filas.map(d => {
+        const p = d.p?.[hora];
+        const bg = modo === 'pron' ? css('--accent') : p != null && color ? color(p) : css('--border');
+        return `<button class="fila" data-id="${d.id}"><span class="dot" style="background:${bg}"></span>
+          <span class="nombre">${esc(d.n)}<small>${esc(d.c)}</small></span><span class="val">${fmt(valor(d), 1)}</span></button>`;
+      }).join('') || '<p class="nota">Sin datos para esta hora.</p>'}</div>
+      <p class="nota" style="margin-top:8px">Toca un punto del mapa para ver su curva del día.</p>`;
+    caja.querySelectorAll('.fila').forEach(b => b.addEventListener('click', () => seleccionar(datos.find(d => d.id === +b.dataset.id), true)));
+  }
+
+  function detalle() {
+    const d = sel;
+    const caja = document.getElementById('caja');
+    caja.className = 'bloque detalle';
+    const serieD = modo === 'pron' ? d.f : d.d;
+    const reg = modo !== 'pron' && d.reg != null ? ` · ${f0(d.reg * 100)}% cliente regulado` : '';
+    caja.innerHTML = `<div class="cab"><div class="etiqueta">Subestación</div><button class="btn" id="cerrar">Volver al ranking</button></div>
+      <h2>${esc(d.n)}</h2>
+      <div class="meta">${esc([d.c, d.r].filter(Boolean).join(', '))}${reg}</div>
+      ${serieD ? `<div class="cab" style="margin-top:12px"><span class="etiqueta">${modo === 'pron' ? 'Pronóstico' : 'Demanda'} por hora</span><span class="nota">${f0(d3.sum(serieD))} MWh en el día</span></div><svg class="mini" id="mini-d"></svg>` : '<p class="nota" style="margin-top:12px">Sin retiros de clientes en esta subestación (solo precio).</p>'}
+      ${modo !== 'pron' && d.p ? `<div class="cab" style="margin-top:10px"><span class="etiqueta">Costo marginal</span><span class="nota">USD/MWh</span></div><svg class="mini" id="mini-p"></svg>` : ''}
+      <div class="barras">${(d.b || []).map(b => `<code>${esc(b)}</code>`).join('')}</div>`;
+    caja.querySelector('#cerrar').addEventListener('click', () => seleccionar(null));
+    if (serieD) curva(d3.select('#mini-d'), serieD, { barras: true });
+    if (modo !== 'pron' && d.p) curva(d3.select('#mini-p'), d.p, { color: color(d3.mean(d.p.filter(v => v != null)) ?? 0) });
+  }
+
+  function seleccionar(d, centrar = false) {
+    sel = d || null;
+    gNodos.selectAll('circle').classed('sel', n => sel && n.id === sel.id);
+    if (sel && centrar) {
+      const [x, y] = xy(sel);
+      svg.transition().duration(reducir() ? 0 : 600).call(zoom.transform, d3.zoomIdentity.translate(ancho / 2, alto / 2).scale(Math.max(k, 8)).translate(-x, -y));
+    }
+    if (sel) detalle(); else ranking();
+  }
+  svg.on('click', () => { if (sel) seleccionar(null); });
+
+  // ---------- cabecera, fecha y estado ----------
+  function subtitulo() {
+    const sub = document.getElementById('sub');
+    if (modo === 'pron') sub.innerHTML = PRON ? `Pronóstico horario del CEN para el <b>${fecha(PRON.dia)}</b>` : 'Sin pronóstico cargado';
+    else sub.innerHTML = DATOS ? `Demanda real y costo marginal del <b>${fecha(DATOS.dia)}</b> · ${DATOS.nodos.length} subestaciones` : 'Sin demanda cargada';
+  }
+
+  function selectorDias() {
+    const s = document.getElementById('dia');
+    if (!DIAS) { s.disabled = true; return; }
+    const opciones = modo === 'pron'
+      ? DIAS.pronostico.slice().reverse().map(d => [d, fecha(d, true)])
+      : DIAS.demanda.slice().reverse().map(d => [d.dia, fecha(d.dia, true) + (d.con_precio ? '' : ' (sin precio)')]);
+    const actual = modo === 'pron' ? diaPron : diaDemanda;
+    s.innerHTML = opciones.map(([v, t]) => `<option value="${v}"${v === actual ? ' selected' : ''}>${t}</option>`).join('');
+    s.disabled = EMBEBIDO != null || opciones.length < 2;
+  }
+
+  function pintarEstado() {
+    const el = document.getElementById('estado'), txt = document.getElementById('estado-txt');
+    const e = ESTADO || {};
+    el.className = 'estado';
+    if (e.en_curso) { el.classList.add('curso'); txt.textContent = `Actualizando${e.paso ? ' · ' + e.paso : ''}…`; }
+    else if (e.ok === false) { el.classList.add('error'); txt.textContent = 'La última actualización falló'; el.title = e.error || ''; }
+    else if (e.ultima_actualizacion) { el.classList.add('ok'); txt.textContent = `Actualizado ${fechaHora(e.ultima_actualizacion)}`; }
+    else txt.textContent = '';
+    if (e.ok === false && e.ultima_actualizacion) txt.textContent += ` · datos del ${fechaHora(e.ultima_actualizacion)}`;
+  }
+
+  function aviso(titulo, texto) {
+    const a = document.getElementById('aviso');
+    a.hidden = !titulo;
+    if (titulo) { document.getElementById('aviso-t').textContent = titulo; document.getElementById('aviso-p').textContent = texto || ''; }
+  }
+
+  async function cargarDemanda(dia) {
+    DATOS = await api('api/mapa' + (dia ? `?dia=${dia}` : ''));
+    diaDemanda = DATOS.dia;
+  }
+  async function cargarPron(dia) {
+    try { PRON = await api('api/pronostico' + (dia ? `?dia=${dia}` : '')); diaPron = PRON.dia; }
+    catch (e) { if (e.status !== 503) throw e; PRON = null; }
+  }
+
+  function refrescarVista() {
+    if (sel) sel = lista().find(n => n.id === sel.id) || null;
+    escalas(); subtitulo(); selectorDias(); leyenda(); dibujar();
+  }
+
+  async function cargarTodo(mantenerDias = false) {
+    DIAS = await api('api/dias');
+    const conPrecio = DIAS.demanda.filter(d => d.con_precio).map(d => d.dia);
+    const defDem = conPrecio[conPrecio.length - 1] || DIAS.demanda[DIAS.demanda.length - 1]?.dia;
+    const disponibles = new Set(DIAS.demanda.map(d => d.dia));
+    await cargarDemanda(mantenerDias && disponibles.has(diaDemanda) ? diaDemanda : defDem);
+    const defPron = DIAS.pronostico[DIAS.pronostico.length - 1];
+    await cargarPron(mantenerDias && DIAS.pronostico.includes(diaPron) ? diaPron : defPron);
+  }
+
+  let versionCargada = null;
+  async function vigilar() {
+    // Revisa el estado del servidor; si publicó datos nuevos, los recarga sin perder la vista.
+    try {
+      ESTADO = await api('api/estado');
+      pintarEstado();
+      if (!ESTADO.hay_datos) {
+        aviso('Preparando datos', ESTADO.en_curso
+          ? `Primera actualización en curso${ESTADO.paso ? ': ' + ESTADO.paso : ''}. Puede tardar varios minutos.`
+          : (ESTADO.error ? 'La actualización falló: ' + ESTADO.error.split('\n')[0] : 'Esperando la primera actualización.'));
+      } else if (ESTADO.ultima_actualizacion !== versionCargada) {
+        await cargarTodo(versionCargada !== null);
+        versionCargada = ESTADO.ultima_actualizacion;
+        aviso(null);
+        refrescarVista();
+      }
+    } catch (e) {
+      if (!DATOS) aviso('No se pudo cargar', e.message);
+    }
+    const espera = ESTADO?.en_curso || !ESTADO?.hay_datos ? 15000 : 120000;
+    setTimeout(vigilar, espera);
+  }
+
+  // ---------- controles ----------
+  document.querySelectorAll('[data-modo]').forEach(b => b.addEventListener('click', () => {
+    modo = b.dataset.modo;
+    document.querySelectorAll('[data-modo]').forEach(x => x.setAttribute('aria-selected', x === b ? 'true' : 'false'));
+    refrescarVista();
+  }));
+  document.getElementById('dia').addEventListener('change', async (e) => {
+    const s = e.target; s.disabled = true;
+    try { modo === 'pron' ? await cargarPron(s.value) : await cargarDemanda(s.value); refrescarVista(); }
+    catch (err) { aviso('No se pudo cargar el día', err.message); setTimeout(() => aviso(null), 4000); }
+    finally { s.disabled = false; }
+  });
+  const rango = document.getElementById('hora');
+  rango.addEventListener('input', () => { hora = +rango.value; dibujar(); });
+  const play = document.getElementById('play');
+  play.addEventListener('click', () => {
+    if (timer) { clearInterval(timer); timer = null; play.textContent = '▶'; play.setAttribute('aria-label', 'Reproducir las 24 horas'); return; }
+    play.textContent = '❚❚'; play.setAttribute('aria-label', 'Pausar');
+    timer = setInterval(() => { hora = (hora + 1) % 24; rango.value = hora; dibujar(); }, 650);
+  });
+  const tema = () => { escalas(); leyenda(); dibujar(); };
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', tema);
+  new MutationObserver(tema).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- arranque ----------
+  function montarBase() {
+    gPaises.selectAll('path').data(BASE.features).join('path').attr('class', d => 'pais ' + d.properties.iso);
+    new ResizeObserver(() => { const primera = !ancho; ajustar(); if (primera) irA('todo', false); dibujar(); }).observe(svg.node());
+  }
+
+  async function iniciar() {
+    if (EMBEBIDO) {
+      ({ mapa: DATOS, pron: PRON, base: BASE, dias: DIAS, estado: ESTADO } = EMBEBIDO);
+      diaDemanda = DATOS?.dia; diaPron = PRON?.dia;
+      montarBase(); pintarEstado(); refrescarVista();
+      return;
+    }
+    try { BASE = await api('api/base'); }
+    catch (e) { aviso('No se pudo cargar el mapa base', e.message); return; }
+    montarBase();
+    leyenda();
+    vigilar();
+  }
+  iniciar();
+})();
+</script>
+</body>
+</html>
