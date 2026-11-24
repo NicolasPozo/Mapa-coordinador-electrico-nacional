@@ -25,9 +25,14 @@ def _leer_env(path: Path) -> dict[str, str]:
 
 
 def obtener(nombre: str, por_defecto: str | None = None) -> str | None:
-    """Variable de entorno del sistema; si no existe, la del archivo .env."""
-    if os.environ.get(nombre):
-        return os.environ[nombre]
+    """Variable de entorno del sistema; si no existe, la del archivo .env.
+
+    Se limpian espacios y comillas: `docker run --env-file` con un .env guardado en Windows
+    (CRLF) deja un "\\r" pegado al valor, y la API respondería 403 con esa clave.
+    """
+    valor = (os.environ.get(nombre) or "").strip().strip('"').strip("'")
+    if valor:
+        return valor
     return _leer_env(ENV_FILE).get(nombre) or por_defecto
 
 

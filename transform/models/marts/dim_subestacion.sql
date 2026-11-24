@@ -12,18 +12,21 @@ with geo as (
     group by id_subestacion
 )
 
+-- Primero la ubicación vía barras del SIP (incluye correcciones manuales); si la subestación
+-- no tiene barras en el SIP (p. ej. solo está en el pronóstico), la de su ficha técnica.
 select
     s.id_subestacion,
     s.nombre,
     s.nemotecnico,
     s.propietario,
     s.coordinado,
-    geo.lat,
-    geo.lon,
-    geo.region,
-    geo.provincia,
-    geo.comuna,
-    coalesce(geo.barras_sip, 0)   as barras_sip,
-    geo.lat is not null           as tiene_coordenadas
+    coalesce(geo.lat, f.lat)               as lat,
+    coalesce(geo.lon, f.lon)               as lon,
+    coalesce(geo.region, f.region)         as region,
+    coalesce(geo.provincia, f.provincia)   as provincia,
+    coalesce(geo.comuna, f.comuna)         as comuna,
+    coalesce(geo.barras_sip, 0)            as barras_sip,
+    coalesce(geo.lat, f.lat) is not null   as tiene_coordenadas
 from {{ ref('stg_infotecnica_subestaciones') }} s
 left join geo using (id_subestacion)
+left join {{ ref('stg_coordenadas_subestaciones') }} f using (id_subestacion)

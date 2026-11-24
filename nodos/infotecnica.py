@@ -24,6 +24,7 @@ from . import config
 BASE_URL = "https://api-infotecnica.coordinador.cl/v1"
 REF = config.RAIZ / "data" / "ref"
 FICHAS = REF / "fichas_subestaciones"
+SEMILLA = config.RAIZ / "semilla" / "fichas_subestaciones.csv"
 USER_AGENT = "nodos/0.1 (proyecto de datos abiertos CEN)"
 
 # Límites aproximados de Chile continental + margen (para descartar coordenadas erróneas).
@@ -188,17 +189,42 @@ def a_latlon(este: float | None, norte: float | None, huso) -> tuple[float | Non
     return None, None, "fuera_de_chile"
 
 
+def _leer_semilla() -> dict[int, dict]:
+    """Campos de ficha incluidos en el repo, para no bajar ~800 fichas en el primer arranque."""
+    if not SEMILLA.exists():
+        return {}
+    df = pd.read_csv(SEMILLA, dtype={"huso": str, "region": str, "provincia": str, "comuna": str})
+    df = df.astype(object).where(df.notna(), None)
+    return {int(r.pop("id_subestacion")): r for r in df.to_dict("records")}
+
+
+def exportar_semilla() -> Path:
+    """Guarda en semilla/ los campos de las fichas ya descargadas (python -m nodos semilla)."""
+    filas = []
+    for archivo in sorted(FICHAS.glob("*.json"), key=lambda a: int(a.stem)):
+        campos = _campos_ficha(json.loads(archivo.read_text(encoding="utf-8")) or {})
+        filas.append({"id_subestacion": int(archivo.stem), **campos})
+    columnas = ["id_subestacion", "este", "norte", "huso", "region", "provincia", "comuna"]
+    SEMILLA.parent.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(filas).reindex(columns=columnas).to_csv(SEMILLA, index=False)
+    print(f"  {len(filas)} fichas -> {SEMILLA.relative_to(config.RAIZ)}")
+    return SEMILLA
+
+
 def coordenadas(cliente: ClienteInfotecnica, ids_subestacion, refrescar: bool = False) -> pd.DataFrame:
     ids = sorted({int(i) for i in ids_subestacion if pd.notna(i)})
-    pendientes = [i for i in ids if refrescar or not (FICHAS / f"{i}.json").exists()]
+    semilla = {} if refrescar else _leer_semilla()
+    pendientes = [i for i in ids if refrescar or not ((FICHAS / f"{i}.json").exists() or i in semilla)]
     if pendientes:
         print(f"  Infotécnica: {len(pendientes)} fichas de subestación por descargar (~{len(pendientes) * cliente.intervalo_min / 60:.0f} min)")
     filas = []
     for n, i in enumerate(ids, 1):
-        ficha = cliente.ficha_general(i, refrescar=refrescar)
-        if pendientes and n % 100 == 0:
+        if i in semilla and not (FICHAS / f"{i}.json").exists():
+            campos = dict(semilla[i])
+        else:
+            campos = _campos_ficha(cliente.ficha_general(i, refrescar=refrescar) or {})
+        if len(pendientes) > 50 and n % 100 == 0:
             print(f"    {n}/{len(ids)}")
-        campos = _campos_ficha(ficha or {})
         lat, lon, estado = a_latlon(campos.get("este"), campos.get("norte"), campos.get("huso"))
         filas.append({"id_subestacion": i, **campos, "lat": lat, "lon": lon, "coord_estado": estado})
     return pd.DataFrame(filas)
@@ -309,10 +335,13 @@ def construir_nodos(refrescar: bool = False) -> pd.DataFrame:
     from .sip import leer_cache
 
     cmg = leer_cache(ENDPOINTS["cmg-real"])
-    if cmg.empty:
-        raise SystemExit("Necesito al menos un día de cmg-real en caché: python -m nodos descargar cmg-real --dias 1 --hasta <fecha>")
     pron = leer_cache(ENDPOINTS["pronostico"])
     dem = leer_cache(ENDPOINTS["demanda-real"])
+    if cmg.empty and pron.empty:
+        raise SystemExit("Necesito al menos un día de cmg-real o de pronóstico en caché: python -m nodos descargar cmg-real --dias 1")
+    if cmg.empty:
+        # Vista rápida del primer arranque: solo hay pronóstico todavía.
+        cmg = pd.DataFrame(columns=["barra_transf", "id_info", "_dia_consulta"])
 
     cliente = ClienteInfotecnica()
     barras_inf, subest = actualizar_catalogo(cliente, refrescar)
@@ -336,7 +365,7 @@ def construir_nodos(refrescar: bool = False) -> pd.DataFrame:
     if conflictos:
         print(f"  {conflictos} códigos SIP cambiaron de id en Infotécnica; se usa el más reciente")
     codigos = set(pares["barra"]) | (set(dem["barra"]) if not dem.empty else set())
-    mapa = pd.DataFrame({"barra": sorted(codigos)}).merge(
+    mapa = pd.DataFrame({"barra": pd.Series(sorted(codigos), dtype=object)}).merge(
         con_id.drop_duplicates("barra"), on="barra", how="left"
     )
     mapa["id_barra_info"] = mapa["id_barra_info"].astype("Int64")
@@ -361,6 +390,10 @@ def construir_nodos(refrescar: bool = False) -> pd.DataFrame:
         barras_inf.loc[barras_inf["id_barra_info"].isin(set(ids_pron)), "id_subestacion"]
     )
     coords = coordenadas(cliente, subest_necesarias, refrescar)
+
+    config.DATA_PROCESSED.mkdir(parents=True, exist_ok=True)
+    # Coordenadas por subestación (incluye las del pronóstico que no tienen barra en el SIP).
+    coords.to_parquet(config.DATA_PROCESSED / "coordenadas_subestaciones.parquet", index=False)
 
     nodos = nodos.merge(coords, on="id_subestacion", how="left")
     nodos["tension_kv"] = nodos["barra_infotecnica"].map(_tension_kv)

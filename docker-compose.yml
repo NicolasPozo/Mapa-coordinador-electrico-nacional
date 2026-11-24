@@ -9,10 +9,12 @@ services:
     env_file: .env
     environment:
       NODOS_ACTUALIZAR_CADA_HORAS: "6"
-      NODOS_DIAS_PRONOSTICO: "3"
-      NODOS_DIAS_DEMANDA_NETA: "14"
-      NODOS_DIAS_CMG: "14"
-      NODOS_DIAS_DEMANDA: "7"
+      # Arranca con una muestra (1 día de demanda real). Más historia: botón «Más datos»
+      # en el mapa, o sube estos valores (p. ej. NODOS_DIAS_DEMANDA: "7").
+      NODOS_DIAS_DEMANDA: "1"
+      NODOS_DIAS_CMG: "1"
+      # Pon "0" si el mapa queda público y no quieres que cualquiera dispare descargas.
+      NODOS_PERMITIR_AMPLIAR: "1"
     volumes:
       - nodos-data:/app/data
     restart: unless-stopped

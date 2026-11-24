@@ -18,6 +18,9 @@ class Endpoint:
     # Si se bajó antes, se considera provisional y se vuelve a pedir en la siguiente ejecución.
     margen_dias: int = 3
     cambia: bool = False  # True si los datos de un día se reemiten (p. ej. pronósticos)
+    # Un día provisional se vuelve a pedir solo si su archivo tiene más de estas horas
+    # (0 = en cada ejecución). Evita re-bajar semanas de demanda real cada 6 horas.
+    refresco_horas: float = 0
 
 
 ENDPOINTS: dict[str, Endpoint] = {
@@ -52,6 +55,7 @@ ENDPOINTS: dict[str, Endpoint] = {
             "Retiros horarios por barra, suministrador y cliente (kWh, negativos)",
             "~2 meses (liquidación mensual)",
             margen_dias=70,
+            refresco_horas=24 * 7,
         ),
         Endpoint(
             "cmg-real",
@@ -59,6 +63,7 @@ ENDPOINTS: dict[str, Endpoint] = {
             "Costo marginal real por barra cada 15 min (USD/MWh y CLP/kWh)",
             "~1 semana",
             margen_dias=10,
+            refresco_horas=24,
         ),
         Endpoint(
             "cmg-online",

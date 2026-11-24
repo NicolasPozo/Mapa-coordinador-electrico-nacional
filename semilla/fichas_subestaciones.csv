@@ -1,0 +1,795 @@
+id_subestacion,este,norte,huso,region,provincia,comuna
+199,389153.999993032,6292393.01293704,19H,Metropolitana de Santiago,Cordillera,San José de Maipo
+200,250123.25,6334053.43,19H,Valparaíso,Valparaíso,Valparaíso
+201,382820.999990679,6289100.01299741,19H,Metropolitana de Santiago,Cordillera,San José de Maipo
+203,387185.02,6258004.74,19H,Metropolitana de Santiago,Cordillera,San José de Maipo
+204,288251.18,6353504.92,19H,Valparaíso,Quillota,Quillota
+206,268850.28,6353171.91,19H,Valparaíso,Valparaíso,Concón
+207,267552.09,6373758.69,19H,Valparaíso,Valparaíso,Puchuncaví
+214,657616.0,5880400.0,18H,Biobío,Arauco,Arauco
+216,725415.63,5939726.15,18H,Ñuble,Itata,Ranquil
+220,721766.0,5399152.0,18G,Los Lagos,Llanquihue,Cochamó
+221,351217.17,6232917.0,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Mostazal
+223,284870.19,6048282.41,19H,Maule,Linares,Colbún
+224,283267.65,6043168.63,19H,Maule,Linares,Colbún
+225,343244.85,6268036.99,19H,Metropolitana de Santiago,Maipo,Buin
+227,341217.35,6331609.0,19H,Metropolitana de Santiago,Chacabuco,Colina
+228,246102.999248903,5861244.01967987,19H,Biobío,Biobío,Quilleco
+229,269860.75,6055842.79,19H,Maule,Linares,Yerbas Buenas
+230,238144.62,5863833.39,19H,Biobío,Biobío,Quilleco
+233,286621.32,6058074.37,19H,Maule,Talca,San Clemente
+234,364099.57,6226836.79,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Machalí
+235,666231.39,5899042.69,18H,Biobío,Concepción,Coronel
+236,719261.2,5478085.47,18G,Los Lagos,Osorno,Puyehue
+237,698735.3,5498695.03,18G,Los Ríos,Ranco,Río Bueno
+240,267489.999674751,6373804.01694487,19H,Valparaíso,Valparaíso,Puchuncaví
+241,318703.999907199,6288420.01444972,19H,Metropolitana de Santiago,Melipilla,Curacaví
+243,267212.03,5867481.64,19H,Biobío,Biobío,Tucapel
+245,336200.99,6038228.55,19H,Maule,Talca,San Clemente
+256,267259.51,6369460.24,19H,Valparaíso,Valparaíso,Quintero
+260,730446.29,5882822.22,18H,Biobío,Biobío,Cabrero
+263,737787.26,5891171.62,18H,Biobío,Biobío,Cabrero
+266,304228.24,6139443.48,19H,Maule,Curicó,Teno
+267,285248.85,6663305.06,19J,Coquimbo,Elqui,Coquimbo
+268,660399.66,5401902.02,18G,Los Lagos,Llanquihue,Puerto Montt
+276,363436.43,6958300.83,19J,Atacama,Copiapó,Copiapó
+277,278947.62,6849083.28,19J,Atacama,Huasco,Huasco
+280,375695.19,6357119.01,19H,Valparaíso,Los Andes,Los Andes
+281,311861.97,6364379.19,19H,Valparaíso,San Felipe de Aconcagua,Llaillay
+283,294093.999830263,6369957.01528246,19H,Valparaíso,Quillota,La Calera
+284,294418.72,6369105.0,19H,Valparaíso,Quillota,La Calera
+285,368245.999983668,6362674.01307188,19H,Valparaíso,Los Andes,San Esteban
+288,294965.32,6065048.94,19H,Maule,Talca,San Clemente
+289,260868.999454022,5842193.0183151,19H,Biobío,Biobío,Santa Bárbara
+290,270636.26,5841976.17,19H,Biobío,Biobío,Santa Bárbara
+292,343145.46,6153067.14,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,San Fernando
+293,357813.49,6144357.16,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,San Fernando
+300,368034.68,6362718.13,19H,Valparaíso,Los Andes,Los Andes
+301,359102.1,6363895.35,19H,Valparaíso,Los Andes,Los Andes
+307,270425.65,5801051.05,19H,Biobío,Biobío,Alto Biobío
+309,320929.31,6037304.13,19H,Maule,Talca,San Clemente
+312,667834.0,5927332.0,18H,Biobío,Concepción,Hualpén
+322,719842.5,5500386.68,18G,Los Lagos,Ranco,Río Bueno
+323,331344.17,6351927.39,19H,Metropolitana de Santiago,Chacabuco,Tiltil
+352,272782.52,6682732.5,19J,Coquimbo,Elqui,Coquimbo
+353,672686.21,5923848.68,18H,Biobío,Concepción,Concepción
+354,736287.0,5852738.0,18H,Biobío,Biobío,Los Angeles
+356,285348.86,6663231.19,19J,Coquimbo,Elqui,Coquimbo
+357,296609.17,6560190.76,19J,Coquimbo,Limarí,Combarbalá
+358,662983.22,5907184.03,18H,Biobío,Concepción,Coronel
+359,300542.79,6130601.11,19H,Maule,Curicó,Teno
+360,288705.96,6113993.02,19H,Maule,Curicó,Molina
+361,254556.11,6059114.69,19H,Maule,Linares,San Javier
+362,620365.53,5832728.45,18H,Biobío,Arauco,Lebu
+363,342169.44,6229766.47,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Graneros
+364,246757.52,5742293.33,19H,La Araucanía,Malleco,Curacautín
+365,658315.12,5880120.4,18H,Biobío,Arauco,Arauco
+366,338738.9,6251497.01,19H,Metropolitana de Santiago,Maipo,Paine
+367,296362.16,6499232.76,19J,Coquimbo,Choapa,Illapel
+368,303103.99,6761767.01,19J,Atacama,Huasco,Vallenar
+369,320251.23,6174256.36,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,San Fernando
+370,288645.54,6202618.49,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Peumo
+371,284723.83,6694556.14,19J,Coquimbo,Elqui,La Serena
+372,667915.01,5934671.29,18H,Biobío,Concepción,Talcahuano
+373,340884.24,6217879.31,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Rancagua
+374,337543.54,6257673.75,19H,Metropolitana de Santiago,Maipo,Paine
+375,759967.35,5942749.96,18H,Ñuble,Diguillín,Chillán
+376,675424.37,5924962.15,18H,Biobío,Concepción,Concepción
+377,298537.79,6653491.31,19J,Coquimbo,Elqui,Andacollo
+378,675470.64,5925008.47,18H,Biobío,Concepción,Concepción
+379,706164.46,5811219.0,18H,La Araucanía,Malleco,Angol
+380,662212.172066305,5902235.24530049,18H,Biobío,Concepción,Coronel
+381,339151.2,6265856.79,19H,Metropolitana de Santiago,Maipo,Buin
+382,304761.41,6409239.9,19H,Valparaíso,Petorca,Cabildo
+383,338613.19,6215284.03,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Rancagua
+384,656611.98,5875179.21,18H,Biobío,Arauco,Arauco
+385,736615.765588742,5844254.19901592,18H,Biobío,Biobío,Los Angeles
+386,675180.86,5913302.21,18H,Biobío,Concepción,Chiguayante
+387,645708.79,5851339.85,18H,Biobío,Arauco,Curanilahue
+388,313500.74,6154642.12,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,Chimbarongo
+389,708786.72,5710804.05,18H,La Araucanía,Cautín,Temuco
+390,265848.02,6463783.88,19J,Coquimbo,Choapa,Los Vilos
+391,334421.65,6205128.89,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Requínoa
+392,318481.51,6169441.91,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,San Fernando
+394,723994.44,5796859.65,18H,La Araucanía,Malleco,Collipulli
+395,673752.31,5923288.17,18H,Biobío,Concepción,Concepción
+396,308451.34,6549138.78,19J,Coquimbo,Limarí,Combarbalá
+397,262616.18,6030031.7,19H,Maule,Linares,Linares
+398,277964.23,6390665.46,19H,Valparaíso,Petorca,Zapallar
+399,759542.84,5946016.92,18H,Ñuble,Diguillín,Chillán
+400,330454.4,6215967.23,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Rancagua
+401,281394.91,6408662.7,19H,Valparaíso,Petorca,Papudo
+402,328729.62,6190289.45,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Rengo
+403,312007.93,6484346.29,19J,Coquimbo,Choapa,Salamanca
+404,318135.75,6169766.65,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,San Fernando
+405,342793.82,6238579.65,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Mostazal
+406,283491.93,6687802.08,19J,Coquimbo,Elqui,La Serena
+407,262491.39,6075105.22,19H,Maule,Talca,Talca
+408,721259.328827396,5731061.64388698,18H,La Araucanía,Cautín,Lautaro
+409,307661.94,6187554.45,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,San Vicente
+410,662172.08,5901040.86,18H,Biobío,Concepción,Coronel
+411,260355.4,6075309.07,19H,Maule,Talca,Talca
+412,667968.93,5932344.25,18H,Biobío,Concepción,Talcahuano
+413,683354.27,5944054.59,18H,Biobío,Concepción,Tomé
+414,704182.549093384,5763042.17357365,18H,La Araucanía,Malleco,Traiguén
+415,639714.61,5834621.14,18H,Biobío,Arauco,Los Alamos
+416,668143.1,5937364.7,18H,Biobío,Concepción,Talcahuano
+417,338254.07,6223186.15,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Rancagua
+418,734708.955807768,5763611.66689544,18H,La Araucanía,Malleco,Victoria
+419,334680.15,6674258.24,19J,Coquimbo,Elqui,Vicuña
+420,271362.26,6091218.28,19H,Maule,Talca,San Rafael
+421,290281.05,6613132.4,19J,Coquimbo,Limarí,Ovalle
+422,680878.07,5934869.78,18H,Biobío,Concepción,Penco
+423,325892.13,6213224.39,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Doñihue
+424,665931.89,5916808.7,18H,Biobío,Concepción,San Pedro de la Paz
+425,313143.77,6206748.95,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Coltauco
+426,732630.37,5848483.81,18H,Biobío,Biobío,Los Angeles
+427,683050.46,5945313.14,18H,Biobío,Concepción,Tomé
+428,320088.47,6185287.07,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Malloa
+429,734648.89,5849809.73,18H,Biobío,Biobío,Los Angeles
+430,309576.24,6682235.42,19J,Coquimbo,Elqui,Vicuña
+431,285499.05,6584206.49,19J,Coquimbo,Limarí,Punitaqui
+432,312747.75,6603085.74,19J,Coquimbo,Limarí,Monte Patria
+433,712545.65,5712806.6,18H,La Araucanía,Cautín,Temuco
+434,707800.378246232,5705551.02615084,18H,La Araucanía,Cautín,Padre Las Casas
+435,337936.69,6255971.62,19H,Metropolitana de Santiago,Maipo,Paine
+436,264361.98,6083252.9,19H,Maule,Talca,Talca
+437,326346.35,6183879.31,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Malloa
+438,679401.55,5931671.54,18H,Biobío,Concepción,Penco
+439,662212.172066305,5902235.24530049,18H,Biobío,Concepción,Coronel
+440,257944.62,6075382.86,19H,Maule,Talca,Talca
+441,720031.38,5720521.98,18H,La Araucanía,Cautín,Lautaro
+442,703645.727009897,5682373.29144276,18H,La Araucanía,Cautín,Pitrufquén
+443,738527.348803431,5646108.45467973,18H,La Araucanía,Cautín,Villarrica
+444,270512.44,6068567.04,19H,Maule,Talca,San Clemente
+449,262828.47,6030447.65,19H,Maule,Linares,Linares
+460,278735.6,6210618.55,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Las Cabras
+461,350524.53,6275515.73,19H,Metropolitana de Santiago,Cordillera,Pirque
+462,662484.03,5906061.85,18 H,Biobío,Concepción,Coronel
+463,670101.679212466,5921133.58797206,18H,Biobío,Concepción,San Pedro de la Paz
+469,296485.01,6125607.35,19H,Maule,Curicó,Curicó
+470,304270.93,6139510.73,19H,Maule,Curicó,Teno
+471,764344.36,5954257.36,18H,Ñuble,Punilla,San Carlos
+472,706418.77,5639278.64,18H,La Araucanía,Cautín,Loncoche
+473,247563.28,5997663.07,19H,Maule,Linares,Parral
+474,738864.97,5613454.45,18H,Los Ríos,Valdivia,Panguipulli
+475,265859.29,6463593.2,19J,Coquimbo,Choapa,Los Vilos
+476,256806.84,6046533.89,19H,Maule,Linares,Villa Alegre
+478,321388.8,6268306.21,19H,Metropolitana de Santiago,Talagante,Talagante
+479,262159.73,6343123.96,19H,Valparaíso,Valparaíso,Viña del Mar
+484,664418.0,5902553.0,18H,Biobío,Concepción,Coronel
+486,243487.0,5647107.0,19H,La Araucanía,Cautín,Pucón
+487,272538.08,6384351.9,19H,Valparaíso,Valparaíso,Puchuncaví
+488,332105.55,6197773.23,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Rengo
+489,345560.97,6215061.4,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Machalí
+491,275395.68,6681127.36,19J,Coquimbo,Elqui,Coquimbo
+492,706444.777487093,5708451.35636286,18H,La Araucanía,Cautín,Temuco
+493,320071.97,6185227.73,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Malloa
+496,318809.06,6195744.36,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Quinta de Tilcoco
+499,310302.27,6231331.51,19H,Metropolitana de Santiago,Melipilla,Alhué
+500,279307.33,5791299.51,19H,Biobío,Biobío,Alto Biobío
+502,635249.48,5582488.93,18H,Los Ríos,Valdivia,Corral
+503,599733.78,5362751.16,18G,Los Lagos,Chiloé,Ancud
+504,759808.57,5882836.12,18H,Ñuble,Diguillín,Yungay
+505,597935.0,5279915.0,18G,Los Lagos,Chiloé,Chonchi
+506,634073.53,5377912.84,18G,Los Lagos,Llanquihue,Calbuco
+507,678213.5,5503750.19,18G,Los Lagos,Osorno,Puyehue
+508,648171.35,5394846.32,18G,Los Lagos,Llanquihue,Maullín
+509,661814.65,5506280.41,18G,Los Lagos,Osorno,Osorno
+510,663652.56,5445122.84,18G,Los Lagos,Llanquihue,Frutillar
+511,700721.18,5491614.26,18G,Los Lagos,Osorno,Puyehue
+512,664170.0,5537763.0,18G,Los Ríos,Ranco,La Unión
+513,670891.05,5409212.91,18G,Los Lagos,Llanquihue,Puerto Montt
+514,687540.18,5584479.24,18H,Los Ríos,Valdivia,Los Lagos
+515,600893.92,5303358.3,18G,Los Lagos,Chiloé,Castro
+516,659533.14,5507154.43,18G,Los Lagos,Osorno,Osorno
+517,729854.27,5610148.12,18H,Los Ríos,Valdivia,Panguipulli
+518,652011.14,5589528.62,18H,Los Ríos,Valdivia,Valdivia
+519,679873.24,5552298.78,18G,Los Ríos,Valdivia,Paillaco
+520,667591.08,5424079.83,18G,Los Lagos,Llanquihue,Puerto Varas
+521,655671.17,5469343.96,18G,Los Lagos,Osorno,Purranque
+525,612703.6,5228063.79,18G,Los Lagos,Chiloé,Quellón
+526,652709.08,5374869.4,18G,Los Lagos,Llanquihue,Calbuco
+527,599725.0,5295795.95,18G,Los Lagos,Chiloé,Castro
+528,606175.35,5333349.97,18G,Los Lagos,Chiloé,Ancud
+529,670933.85,5408973.27,18G,Los Lagos,Llanquihue,Puerto Montt
+530,655214.21,5592800.14,18H,Los Ríos,Valdivia,Valdivia
+531,606197.66,5333477.7,18G,Los Lagos,Chiloé,Ancud
+560,343008.78,6268181.6,19H,Metropolitana de Santiago,Maipo,Buin
+561,284869.999732334,6048733.01628403,19H,Maule,Linares,Colbún
+562,362879.84960656,6958759.81425786,19F,Atacama,Copiapó,Copiapó
+563,410438.78,7013030.66,19J,Atacama,Copiapó,Copiapó
+564,349186.999978682,6913510.01248552,19J,Atacama,Copiapó,Copiapó
+565,339041.86,6300544.4,19H,Metropolitana de Santiago,Santiago,Cerro Navia
+566,738037.0,5891216.0,18H,Biobío,Biobío,Cabrero
+568,675520.87,5925094.65,18H,Biobío,Concepción,Concepción
+569,396437.28625682,7079890.69491971,19J,Atacama,Chañaral,Diego de Almagro
+570,315175.75,6794014.24,19J,Atacama,Huasco,Vallenar
+571,368360.999991035,7076330.01186837,19J,Atacama,Chañaral,Chañaral
+572,281553.49,5872238.86,19H,Biobío,Biobío,Antuco
+573,667558.2,5926910.2,18H,Biobío,Concepción,Hualpén
+574,279447.999832435,6848593.01513901,19J,Atacama,Huasco,Huasco
+575,284329.999739328,6108947.01623375,19H,Maule,Curicó,Molina
+577,703453.76,5871157.17,18H,Biobío,Biobío,Laja
+578,348084.04,6597727.08,19J,Coquimbo,Limarí,Monte Patria
+579,265749.8,6463689.77,19J,Coquimbo,Choapa,Los Vilos
+580,311877.999927586,6841952.01362917,19J,Atacama,Huasco,Freirina
+581,280258.96,6681578.33,19J,Coquimbo,Elqui,Coquimbo
+582,352164.56,7235529.77,19J,Antofagasta,Antofagasta,Taltal
+583,304303.9,6043687.02,19H,Maule,Linares,Colbún
+584,326524.47,6325196.09,19H,Metropolitana de Santiago,Chacabuco,Tiltil
+585,670989.82,5409070.82,18G,Los Lagos,Llanquihue,Puerto Montt
+586,289660.3,6351666.92,19H,Valparaíso,Quillota,Quillota
+587,340859.48,6218072.58,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Rancagua
+589,667411.62,5931473.38,18H,Biobío,Concepción,Talcahuano
+590,349765.59,6208701.49,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Machalí
+591,712353.0,5712711.0,18H,La Araucanía,Cautín,Temuco
+592,655214.21,5592800.14,18H,Los Ríos,Valdivia,Valdivia
+593,326012.999951876,6839095.0131745,19J,Atacama,Huasco,Vallenar
+604,713823.71134039,5711147.7297295,18H,La Araucanía,Cautín,Padre Las Casas
+605,291341.96,6377526.45,19H,Valparaíso,Quillota,Nogales
+606,301211.44,6749613.76,19J,Coquimbo,Elqui,La Higuera
+607,315156.2,6168196.12,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,Placilla
+608,665985.2,5904778.91,18H,Biobío,Concepción,Coronel
+611,253478.66,6535600.8,19J,Coquimbo,Choapa,Canela
+614,679385.47,5620116.0,18H,Los Ríos,Valdivia,Mariquina
+615,283537.63,6353265.52,19H,Valparaíso,Quillota,Quillota
+616,354871.99,6818287.01,19J,Atacama,Huasco,Alto del Carmen
+617,321259.99,7002404.01,19J,Atacama,Copiapó,Caldera
+618,376087.05,6949214.6,19J,Atacama,Copiapó,Tierra Amarilla
+619,376101.74,6949217.31,19J,Atacama,Chañaral,Chañaral
+620,367961.99,6970860.01,19J,Atacama,Copiapó,Copiapó
+621,364265.99,6975242.01,19J,Atacama,Copiapó,Copiapó
+622,388886.99,6923718.01,19J,Atacama,Copiapó,Tierra Amarilla
+623,374866.05,6967683.62,19J,Atacama,Copiapó,Copiapó
+624,372287.99,6959765.01,19J,Atacama,Copiapó,Tierra Amarilla
+627,249496.65,6190416.01,19H,Libertador Gral. Bernardo O'Higgins,Cardenal Caro,Marchihue
+628,295755.91,6269164.76,19H,Metropolitana de Santiago,Melipilla,Melipilla
+629,294810.0,6284227.59,19H,Metropolitana de Santiago,Melipilla,Melipilla
+630,743157.72,6016869.39,18H,Maule,Cauquenes,Cauquenes
+631,295019.96,6265967.01,19H,Metropolitana de Santiago,Melipilla,Melipilla
+632,735980.0,6083525.9,18H,Maule,Talca,Constitución
+633,297829.23,6271534.32,19H,Metropolitana de Santiago,Melipilla,Melipilla
+634,317506.66,6268379.7,19H,Metropolitana de Santiago,Talagante,Talagante
+635,309554.85,6269225.33,19H,Metropolitana de Santiago,Talagante,El Monte
+636,277773.5,6240170.06,19H,Metropolitana de Santiago,Melipilla,San Pedro
+637,244531.72,6126135.57,19H,Maule,Curicó,Hualañé
+638,735571.01,5965319.64,18H,Ñuble,Itata,Ninhue
+639,264501.99,6198265.01,19H,Libertador Gral. Bernardo O'Higgins,Cardenal Caro,Marchihue
+640,262992.91,6243640.11,19H,Metropolitana de Santiago,Melipilla,San Pedro
+641,730120.2,6026527.05,18H,Maule,Cauquenes,Chanco
+642,276879.88,6245429.09,19H,Metropolitana de Santiago,Melipilla,San Pedro
+643,271303.53,6277520.45,19H,Valparaíso,San Antonio,San Antonio
+644,772370.3,6124421.18,18H,Maule,Curicó,Licantén
+645,278891.28,6175255.17,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,Palmilla
+646,289108.57,6258893.75,19H,Metropolitana de Santiago,Melipilla,Melipilla
+647,258820.46,6190177.39,19H,Libertador Gral. Bernardo O'Higgins,Cardenal Caro,Marchihue
+648,298191.14,6162799.01,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,Nancagua
+649,285056.42,6165301.64,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,Santa Cruz
+650,253161.06,6118110.78,19H,Maule,Curicó,Hualañé
+651,304624.31,6164226.06,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,Placilla
+652,259639.49,6196194.39,19H,Libertador Gral. Bernardo O'Higgins,Cardenal Caro,Marchihue
+653,261226.37,6230356.19,19H,Libertador Gral. Bernardo O'Higgins,Cardenal Caro,Litueche
+654,720020.12,5976250.92,18H,Ñuble,Itata,Quirihue
+655,248380.2,6138094.11,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,Lolol
+656,261450.25,6230477.7,19H,Libertador Gral. Bernardo O'Higgins,Cardenal Caro,Litueche
+657,251229.45,6008206.52,19H,Maule,Linares,Retiro
+658,235459.64,5963860.32,19H,Ñuble,Punilla,San Carlos
+659,266937.06,6064457.96,19H,Maule,Talca,San Clemente
+660,254289.79,6058293.68,19H,Maule,Linares,San Javier
+661,286474.96,6236583.01,19H,Metropolitana de Santiago,Melipilla,San Pedro
+662,260003.18,6111275.68,19H,Maule,Curicó,Sagrada Familia
+669,270093.2,6089592.55,19H,Maule,Talca,San Rafael
+674,353436.57,6302594.35,19H,Metropolitana de Santiago,Santiago,Las Condes
+675,343022.94,6301838.91,19H,Metropolitana de Santiago,Santiago,Renca
+676,357273.995955459,6299520.03553716,19H,Metropolitana de Santiago,Santiago,La Reina
+677,354541.999971509,6302188.01336915,19H,Metropolitana de Santiago,Santiago,Las Condes
+678,338792.9,6317708.03,19H,Metropolitana de Santiago,Chacabuco,Colina
+679,345345.67,6299650.61,19H,Metropolitana de Santiago,Santiago,Santiago
+680,343183.73,6268624.42,19H,Metropolitana de Santiago,Maipo,Buin
+681,316725.04,6347434.4,19H,Metropolitana de Santiago,Chacabuco,Tiltil
+682,343169.98,6300711.69,19H,Metropolitana de Santiago,Santiago,Quinta Normal
+683,340753.999956511,6310340.01375881,19H,Metropolitana de Santiago,Santiago,Quilicura
+684,339706.48,6288990.69,19H,Metropolitana de Santiago,Maipo,San Bernardo
+685,345282.999962169,6295040.01367344,19H,Metropolitana de Santiago,Santiago,Santiago
+686,310036.49,6299888.66,19H,Metropolitana de Santiago,Melipilla,Curacaví
+687,332830.22,6329663.53,19H,Metropolitana de Santiago,Chacabuco,Tiltil
+688,348473.05,6307715.54,19H,Metropolitana de Santiago,Santiago,Huechuraba
+689,356575.61,6286975.72,19H,Metropolitana de Santiago,Santiago,La Florida
+690,345110.999960097,6289423.01357744,19H,Metropolitana de Santiago,Santiago,La Cisterna
+691,353789.33,6309402.19,19H,Metropolitana de Santiago,Santiago,Lo Barnechea
+692,350060.999964874,6279050.01360141,19H,Metropolitana de Santiago,Cordillera,Puente Alto
+693,354566.6,6296384.6,19H,Metropolitana de Santiago,Santiago,Peñalolén
+694,336393.77,6311973.75,19H,Metropolitana de Santiago,Chacabuco,Lampa
+695,339799.26,6285281.58,19H,Metropolitana de Santiago,Maipo,San Bernardo
+696,322651.31,6297406.76,19H,Metropolitana de Santiago,Santiago,Pudahuel
+697,336803.999946004,6304210.01386596,19H,Metropolitana de Santiago,Santiago,Renca
+699,322506.65,6296448.53,19H,Metropolitana de Santiago,Santiago,Pudahuel
+700,343085.26,6294751.6,19H,Metropolitana de Santiago,Santiago,Estación Central
+701,346183.999961742,6298027.01354249,19H,Metropolitana de Santiago,Santiago,Santiago
+702,359764.5,6300276.15,19H,Metropolitana de Santiago,Santiago,Las Condes
+703,358956.92,6304192.11,19H,Metropolitana de Santiago,Santiago,Las Condes
+704,353758.67,6291481.0,19H,Metropolitana de Santiago,Santiago,Peñalolén
+705,339060.12,6290235.73,19H,Metropolitana de Santiago,Santiago,Maipú
+706,327605.18,6279587.12,19H,Metropolitana de Santiago,Talagante,Peñaflor
+708,345054.43,6294335.54,19H,Metropolitana de Santiago,Santiago,Pedro Aguirre Cerda
+709,337662.52,6292878.2,19H,Metropolitana de Santiago,Santiago,Maipú
+710,341109.13,6288616.62,19H,Metropolitana de Santiago,Maipo,San Bernardo
+711,329572.38,6334037.52,19H,Metropolitana de Santiago,Chacabuco,Tiltil
+712,339237.9,6300672.34,19H,Metropolitana de Santiago,Santiago,Cerro Navia
+713,341952.999958951,6306310.01373998,19H,Metropolitana de Santiago,Santiago,Quilicura
+714,347546.42,6305108.38,19H,Metropolitana de Santiago,Santiago,Huechuraba
+715,342923.94,6301187.45,19H,Metropolitana de Santiago,Santiago,Renca
+716,322687.37,6346150.01,19H,Metropolitana de Santiago,Chacabuco,Tiltil
+717,340654.19,6279790.29,19H,Metropolitana de Santiago,Maipo,San Bernardo
+718,347592.79,6300139.33,19H,Metropolitana de Santiago,Santiago,Recoleta
+719,348837.08,6293803.26,19H,Metropolitana de Santiago,Santiago,San Joaquín
+720,341265.999952454,6297870.01376407,19H,Metropolitana de Santiago,Santiago,Lo Prado
+721,335310.44,6300032.47,19H,Metropolitana de Santiago,Santiago,Pudahuel
+722,350471.99996949,6294930.01357296,19H,Metropolitana de Santiago,Santiago,Macul
+723,333476.89,6269534.11,19H,Metropolitana de Santiago,Santiago,Maipú
+724,351140.999963191,6286590.01356254,19H,Metropolitana de Santiago,Santiago,La Florida
+725,351699.15,6283042.56,19H,Metropolitana de Santiago,Cordillera,Puente Alto
+726,350813.999967486,6302088.01344069,19H,Metropolitana de Santiago,Santiago,Las Condes
+774,262711.18,6337382.83,19H,Valparaíso,Valparaíso,Viña del Mar
+775,257938.0,6308458.39,19H,Valparaíso,San Antonio,Algarrobo
+776,292609.25,6269816.01,19H,Metropolitana de Santiago,Melipilla,Melipilla
+777,274921.64,6311130.19,19H,Valparaíso,Valparaíso,Casablanca
+778,316364.77,6371895.17,19H,Valparaíso,San Felipe de Aconcagua,Catemu
+780,264739.33,6353165.67,19H,Valparaíso,Valparaíso,Concón
+781,293654.4,6380348.14,19H,Valparaíso,Quillota,Nogales
+783,392480.999994332,6362645.01282296,19H,Valparaíso,Los Andes,Los Andes
+784,294388.34,6369165.19,19H,Valparaíso,Quillota,La Calera
+785,311734.0,6364271.0,19H,Valparaíso,Valparaíso,Valparaíso
+786,317604.34,6391446.17,19H,Valparaíso,Petorca,Cabildo
+787,259215.15,6340313.73,19H,Valparaíso,Valparaíso,Valparaíso
+788,264142.12,6342043.32,19H,Valparaíso,Valparaíso,Viña del Mar
+789,328634.0,6370304.0,19H,Valparaíso,San Felipe de Aconcagua,Panquehue
+790,261209.2,6333777.86,19H,Valparaíso,Valparaíso,Valparaíso
+791,252717.7,6340804.16,19H,Valparaíso,Valparaíso,Valparaíso
+792,273633.48,6341734.0,19H,Valparaíso,Marga Marga,Quilpué
+793,252105.02,6322311.83,19H,Valparaíso,Valparaíso,Casablanca
+794,267283.89,6373519.6,19H,Valparaíso,Valparaíso,Puchuncaví
+795,263663.79,6348091.06,19H,Valparaíso,Valparaíso,Viña del Mar
+796,375038.961552,6356681.00481,19H,Valparaíso,Los Andes,Los Andes
+797,378311.78,6357831.62,19H,Valparaíso,Los Andes,Los Andes
+798,258438.17,6279002.86,19H,Valparaíso,San Antonio,San Antonio
+799,339328.48,6373897.02,19H,Valparaíso,San Felipe de Aconcagua,San Felipe
+801,349032.57,6367050.6,19H,Valparaíso,Los Andes,Los Andes
+802,258708.83,6288265.06,19H,Valparaíso,San Antonio,El Tabo
+803,290758.3,6387540.86,19H,Valparaíso,Quillota,Nogales
+804,255173.07,6339518.45,19H,Valparaíso,Valparaíso,Valparaíso
+822,310843.22,6147591.41,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,Chimbarongo
+825,752019.28,5923740.41,18H,Ñuble,Diguillín,Bulnes
+826,764362.42,5954303.23,18H,Ñuble,Punilla,San Carlos
+827,756290.94,5933399.22,18H,Ñuble,Diguillín,Chillán Viejo
+828,262389.29,5919713.39,19H,Ñuble,Diguillín,Pinto
+829,752923.18,5942914.92,18H,Ñuble,Diguillín,Chillán Viejo
+832,354659.294167649,6278921.81730523,19H,Metropolitana de Santiago,Cordillera,Puente Alto
+833,357391.789669488,6279134.21546059,19H,Metropolitana de Santiago,Cordillera,Puente Alto
+836,365800.99,7223329.01,19J,Antofagasta,Antofagasta,Taltal
+837,731537.68,5897498.32,18H,Biobío,Biobío,Cabrero
+839,679530.78,5708636.91,18H,La Araucanía,Cautín,Nueva Imperial
+840,707416.37,5704949.92,18H,La Araucanía,Cautín,Padre Las Casas
+841,664720.0,5892657.0,18H,Biobío,Concepción,Lota
+842,731603.95,5897314.61,18H,Biobío,Biobío,Cabrero
+843,717091.29,5837064.43,18H,Biobío,Biobío,Negrete
+845,254825.33,6298209.13,19H,Valparaíso,San Antonio,El Quisco
+846,250834.6,6302788.92,19H,Valparaíso,San Antonio,El Quisco
+847,256548.9,6304027.04,19H,Valparaíso,San Antonio,Algarrobo
+848,258695.24,6304893.93,19H,Valparaíso,San Antonio,Algarrobo
+850,261178.75,6032057.43,19 H,Maule,Linares,Linares
+851,281159.09,6041142.82,19H,Maule,Linares,Colbún
+852,256832.16,6016869.57,19H,Maule,Linares,Longaví
+853,246808.22,5981468.69,19H,Ñuble,Punilla,Ñiquén
+854,682327.29,5561430.86,18G,Los Ríos,Valdivia,Paillaco
+857,316820.57,6368477.73,19H,Valparaíso,San Felipe de Aconcagua,Catemu
+861,369974.03,6307154.84,19H,Metropolitana de Santiago,Santiago,Lo Barnechea
+875,655311.2,5593864.97,18H,Los Ríos,Valdivia,Valdivia
+876,265650.37,6056687.19,19H,Maule,Linares,Yerbas Buenas
+879,667820.0,5931972.0,18H,Biobío,Concepción,Talcahuano
+881,322142.99994741,6869416.0132288,19J,Atacama,Huasco,Huasco
+883,369615.999990384,6955232.01209766,19J,Atacama,Copiapó,Tierra Amarilla
+884,306983.0,6812574.0,19J,Atacama,Huasco,Vallenar
+886,284560.48,6708715.2,19J,Coquimbo,Elqui,La Serena
+887,707104.0,5845423.0,18H,Biobío,Biobío,Nacimiento
+888,703091.0,5870701.0,18H,Biobío,Biobío,Laja
+889,721517.34,5814168.52,18H,La Araucanía,Malleco,Collipulli
+891,355487.51,6280227.49,19H,Metropolitana de Santiago,Cordillera,Puente Alto
+897,381294.99,6353361.49,19H,Valparaíso,Los Andes,Los Andes
+899,380175.0,6331525.0,19H,Metropolitana de Santiago,Santiago,Lo Barnechea
+908,440510.999999899,7093048.01146098,19J,Atacama,Chañaral,Diego de Almagro
+910,420243.999999385,7087634.01150799,19J,Atacama,Chañaral,Diego de Almagro
+919,343526.0,6290951.2,19H,Metropolitana de Santiago,Santiago,Lo Espejo
+921,373426.78,6356271.44,19H,Valparaíso,Los Andes,Los Andes
+926,335631.2,6211057.14,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Requínoa
+928,318153.0,6169737.0,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,San Fernando
+933,256779.91,6046535.05,19H,Maule,Linares,Villa Alegre
+935,239328.11,5979363.35,19H,Ñuble,Punilla,Ñiquén
+936,764320.62,5954245.64,18H,Ñuble,Punilla,San Carlos
+937,741886.63,5930167.04,18H,Ñuble,Diguillín,Bulnes
+940,712804.32,5827845.1,18H,La Araucanía,Malleco,Renaico
+943,675526.0,5925011.0,18H,Biobío,Concepción,Concepción
+946,667515.31,5929544.27,18H,Biobío,Concepción,Talcahuano
+952,313266.96,6778092.79,19J,Coquimbo,Elqui,La Higuera
+956,267009.0,6370558.0,19H,Valparaíso,Valparaíso,Quintero
+959,680945.03,5934419.46,18H,Biobío,Concepción,Penco
+960,665646.31,5918217.62,18H,Biobío,Concepción,San Pedro de la Paz
+962,731629.68,5897308.28,18H,Biobío,Biobío,Cabrero
+963,346123.98,6298015.72,19H,Metropolitana de Santiago,Santiago,Santiago
+966,362886.999989809,7154971.01176756,19J,Antofagasta,Antofagasta,Taltal
+967,368598.999991758,7146065.01171648,19J,Antofagasta,Antofagasta,Taltal
+975,310382.67,6464131.93,19J,Coquimbo,Choapa,Los Vilos
+979,345731.39,6209782.74,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Requínoa
+980,667514.0,5929845.0,18H,Biobío,Concepción,Talcahuano
+984,667763.16,5928172.58,18H,Biobío,Concepción,Hualpén
+993,664278.43,5910783.96,18H,Biobío,Concepción,Coronel
+1001,321448.43,6174021.43,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,San Fernando
+1005,732575.93,5764344.38,18H,La Araucanía,Malleco,Victoria
+1035,324138.59,6199261.28,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Rengo
+1044,325967.01,6839096.01,19J,Atacama,Huasco,Vallenar
+1045,292748.66,6269847.23,19H,Metropolitana de Santiago,Melipilla,Melipilla
+1050,266882.8,6234519.01,19H,Metropolitana de Santiago,Melipilla,San Pedro
+1052,368180.02,6283421.61,19H,Metropolitana de Santiago,Cordillera,San José de Maipo
+1056,354069.999971704,6337175.01333199,19H,Metropolitana de Santiago,Chacabuco,Colina
+1098,265022.999647625,6342216.01719118,19H,Valparaíso,Valparaíso,Viña del Mar
+1106,254361.999544653,6321332.01811418,19H,Valparaíso,Valparaíso,Casablanca
+1114,254802.999543227,6303449.0181098,19H,Valparaíso,San Antonio,Algarrobo
+1125,341040.0,6216114.0,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Rancagua
+1131,325038.999933092,6463927.01386399,19J,Coquimbo,Choapa,Salamanca
+1563,329534.069935801,6334037.0540278,19H,Metropolitana de Santiago,Chacabuco,Tiltil
+1606,338531.21,6289231.37,19H,Metropolitana de Santiago,Santiago,Maipú
+1613,760687.02,6061688.87,18H,Maule,Linares,San Javier
+1620,679581.99,5619997.1,18H,Los Ríos,Valdivia,Mariquina
+1621,693432.29,5501191.25,18G,Los Lagos,Osorno,Puyehue
+1622,718185.3,5468062.14,18G,Los Lagos,Osorno,Puerto Octay
+1625,368205.988811017,6283430.40513129,19H,Metropolitana de Santiago,Cordillera,San José de Maipo
+1630,323468.37,6393237.54,19H,Valparaíso,Petorca,Cabildo
+1631,641361.63,5811563.54,18H,Biobío,Arauco,Cañete
+1632,687327.43,5793530.97,18H,La Araucanía,Malleco,Los Sauces
+1634,346344.0,6281106.0,19H,Metropolitana de Santiago,Santiago,La Pintana
+1640,266957.73,6047119.21,19H,Maule,Linares,Yerbas Buenas
+1642,261366.5,6230547.83,19H,Libertador Gral. Bernardo O'Higgins,Cardenal Caro,Litueche
+1646,267035.87,5867391.98,19H,Biobío,Biobío,Tucapel
+1649,447008.43,6882118.9,19J,Atacama,Huasco,Freirina
+1650,404071.318058844,6897554.2750588,19J,Atacama,Copiapó,Tierra Amarilla
+1651,368521.99999039,7001097.01202038,19J,Atacama,Copiapó,Copiapó
+1652,320471.999952333,7025916.01294435,19J,Atacama,Copiapó,Caldera
+1654,333391.3,6269601.83,19H,Metropolitana de Santiago,Talagante,Talagante
+1656,762772.43,5944091.59,18H,Ñuble,Diguillín,Chillán
+1662,742160.0,5826009.0,18H,Biobío,Biobío,Mulchén
+1663,662271.29,5506666.68,18G,Los Lagos,Osorno,Osorno
+1664,662064.06,5506787.47,18G,Los Lagos,Osorno,Osorno
+1667,373323.88,6155474.16,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,San Fernando
+1668,383073.01,6991208.24,19J,Atacama,Copiapó,Copiapó
+1671,390269.11,6985092.45,19J,Atacama,Copiapó,Copiapó
+1673,251601.99960282,6582631.01779512,19J,Coquimbo,Limarí,Ovalle
+1676,741937.19,5825844.24,18H,Biobío,Biobío,Mulchén
+1679,312672.66,6045288.75,19H,Maule,Linares,Colbún
+1680,313587.19,6029872.63,19H,Maule,Linares,Colbún
+1686,357620.45,6973934.93,19J,Atacama,Copiapó,Copiapó
+1689,719004.28,5875137.46,18H,Biobío,Biobío,Cabrero
+1692,264628.097951,6353314.39941,19H,Valparaíso,Valparaíso,Concón
+1697,260468.999682152,6615031.01698152,19J,Coquimbo,Limarí,Ovalle
+1698,241917.0,6615906.0,19J,Coquimbo,Limarí,Ovalle
+1700,250474.53,6563764.3,19J,Coquimbo,Limarí,Ovalle
+1701,350579.57,7062365.84,19J,Atacama,Chañaral,Chañaral
+1702,251318.12,5822720.54,19H,Biobío,Biobío,Santa Bárbara
+1703,598008.53,5319228.55,18G,Los Lagos,Chiloé,Dalcahue
+1708,694027.22,5500996.73,18G,Los Lagos,Osorno,Puyehue
+1716,248024.09,5930075.31,19H,Ñuble,Diguillín,Pinto
+1717,669950.0,5534727.0,18G,Los Ríos,Ranco,La Unión
+1720,412151.531837893,7227606.5306528,19J,Antofagasta,Antofagasta,Taltal
+1723,367560.96,7222505.2,19J,Antofagasta,Antofagasta,Taltal
+1726,312213.702359682,6031810.63367402,19H,Maule,Linares,Colbún
+1728,661798.91,5402723.37,18G,Los Lagos,Llanquihue,Puerto Montt
+1731,700345.65,5669824.83,18H,La Araucanía,Cautín,Gorbea
+1735,413469.16,7089351.54,19J,Atacama,Chañaral,Diego de Almagro
+1741,346055.85,6315373.76,19H,Metropolitana de Santiago,Chacabuco,Colina
+1742,379229.17,7090100.12,19J,Atacama,Chañaral,Chañaral
+1746,323591.93,6298233.82,19H,Metropolitana de Santiago,Santiago,Pudahuel
+1748,281317.32,5693164.88,19H,La Araucanía,Cautín,Melipeuco
+1749,268549.94,5696777.12,19H,La Araucanía,Cautín,Melipeuco
+1753,370341.73,6129965.25,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,San Fernando
+1756,668501.09,5492018.6,18G,Los Lagos,Osorno,Osorno
+1757,282618.28,6341028.04,19H,Valparaíso,Marga Marga,Villa Alemana
+1758,368062.999991832,7174096.011661,19J,Antofagasta,Antofagasta,Taltal
+1761,720260.51,5478867.12,18G,Los Lagos,Osorno,Puyehue
+1764,363392.39,6983984.29,19J,Atacama,Copiapó,Copiapó
+1765,363531.58,6959179.86,19J,Atacama,Copiapó,Copiapó
+1770,728594.0,5813182.0,18H,Biobío,Biobío,Mulchén
+1771,712489.05,5825133.1,18H,La Araucanía,Malleco,Renaico
+1772,605557.33,5309505.9,18G,Los Lagos,Chiloé,Dalcahue
+1774,713507.36,5821835.18,18H,La Araucanía,Malleco,Renaico
+1775,719777.86,5841094.35,18H,Biobío,Biobío,Los Angeles
+1779,346021.82,6336105.03,19H,Metropolitana de Santiago,Chacabuco,Colina
+1782,720294.36,5478849.1,18G,Los Lagos,Osorno,Puyehue
+1784,367988.53,7174207.95,19J,Antofagasta,Antofagasta,Taltal
+1786,365792.25,7223383.09,19J,Antofagasta,Antofagasta,Taltal
+1788,717442.84,5835452.36,18H,Biobío,Biobío,Negrete
+1790,339134.87,6300607.13,19H,Metropolitana de Santiago,Santiago,Cerro Navia
+1791,326497.6,6338112.52,19H,Metropolitana de Santiago,Chacabuco,Tiltil
+1793,359167.52,6955304.88,19J,Atacama,Copiapó,Copiapó
+1794,311281.54,6841132.62,19J,Atacama,Huasco,Huasco
+1795,286525.0,6665776.0,19J,Coquimbo,Elqui,Coquimbo
+1809,508374.999999995,7533260.01042868,19K,Antofagasta,El Loa,Calama
+1811,412118.999999208,7330503.01100114,19J,Antofagasta,Antofagasta,Antofagasta
+1812,384634.83,7760038.98,19K,Tarapacá,Iquique,Alto Hospicio
+1813,365526.2,7364443.38,19K,Antofagasta,Antofagasta,Antofagasta
+1814,542285.6,7343792.33,19J,Antofagasta,Antofagasta,Antofagasta
+1815,542482.999999991,7343821.01090171,19J,Antofagasta,Antofagasta,Antofagasta
+1816,359776.45,7448307.72,19K,Antofagasta,Antofagasta,Mejillones
+1817,359231.999991174,7385641.01126854,19K,Antofagasta,Antofagasta,Antofagasta
+1818,413214.999999425,7498953.01058257,19K,Antofagasta,Antofagasta,Mejillones
+1819,363894.999997788,7955624.00953313,19K,Arica y Parinacota,Arica,Arica
+1820,354874.37,7445519.72,19K,Antofagasta,Antofagasta,Mejillones
+1823,507913.47,7519710.87,19K,Antofagasta,El Loa,Calama
+1824,375803.34,7405323.05,19K,Antofagasta,Antofagasta,Antofagasta
+1826,442027.000000003,7968535.00916578,19K,Arica y Parinacota,Parinacota,Putre
+1827,362366.999997663,7957601.00954184,19K,Arica y Parinacota,Arica,Arica
+1828,353537.8,7445135.35,19K,Antofagasta,Antofagasta,Mejillones
+1831,387652.65,7548596.3,19K,Antofagasta,Tocopilla,Tocopilla
+1838,375810.14,7698925.07,19K,Tarapacá,Iquique,Iquique
+1839,374975.43,7555840.67,19K,Antofagasta,Tocopilla,Tocopilla
+1840,357836.0,7381336.0,19K,Antofagasta,Antofagasta,Antofagasta
+1841,472029.36,7781407.7,19K,Tarapacá,Tamarugal,Pozo Almonte
+1842,382554.22,7760395.59,19K,Tarapacá,Iquique,Iquique
+1844,355653.999990752,7445882.0111618,19K,Antofagasta,Antofagasta,Mejillones
+1846,473811.000000022,7322001.0109493,19J,Antofagasta,Antofagasta,Antofagasta
+1847,363099.88,7957619.02,19K,Arica y Parinacota,Arica,Arica
+1848,508384.24,7533433.63,19K,Antofagasta,El Loa,Calama
+1849,360332.06,7448555.6,19K,Antofagasta,Antofagasta,Mejillones
+1850,537785.94,7680198.09,19K,Tarapacá,Tamarugal,Pica
+1857,350124.73,7371142.88,19K,Antofagasta,Antofagasta,Antofagasta
+1858,441547.56,7536513.62,19K,Antofagasta,Tocopilla,María Elena
+1859,387248.0,7760738.0,19K,Tarapacá,Iquique,Alto Hospicio
+1860,357237.06,7395682.26,19K,Antofagasta,Antofagasta,Antofagasta
+1861,489613.55,7318787.08,19J,Antofagasta,Antofagasta,Antofagasta
+1862,531637.52,7569178.34,19K,Antofagasta,El Loa,Calama
+1863,460733.83,7406166.0,19K,Antofagasta,Antofagasta,Sierra Gorda
+1864,377800.11,7491561.69,19K,Antofagasta,Antofagasta,Mejillones
+1865,434779.94,7528231.5,19K,Antofagasta,Tocopilla,María Elena
+1866,449474.93,7300223.36,19J,Antofagasta,Antofagasta,Antofagasta
+1867,489880.000000007,7464653.01060438,19K,Antofagasta,Antofagasta,Sierra Gorda
+1868,441551.52,7535735.2,19K,Antofagasta,Tocopilla,María Elena
+1869,493905.47,7316908.34,19J,Antofagasta,Antofagasta,Antofagasta
+1871,358383.35,7381247.72,19K,Antofagasta,Antofagasta,Antofagasta
+1872,489887.09,7456551.21,19K,Antofagasta,Antofagasta,Sierra Gorda
+1875,411645.53,7361427.21,19K,Antofagasta,Antofagasta,Antofagasta
+1876,445826.999999977,7405148.01076147,19K,Antofagasta,Antofagasta,Sierra Gorda
+1878,518125.92,7407589.53,19K,Antofagasta,Antofagasta,Sierra Gorda
+1881,365500.95,7369410.26,19K,Antofagasta,Antofagasta,Antofagasta
+1882,381950.0,7765227.0,19K,Tarapacá,Iquique,Iquique
+1885,511969.999999997,7531365.01043363,19K,Antofagasta,El Loa,Calama
+1886,362775.88,7439801.66,19K,Antofagasta,Antofagasta,Mejillones
+1887,362807.87,7452097.56,19K,Antofagasta,Antofagasta,Mejillones
+1890,358527.64,7396478.76,19K,Antofagasta,Antofagasta,Antofagasta
+1891,458168.82,7406871.37,19K,Antofagasta,Antofagasta,Sierra Gorda
+1892,493913.63,7307995.38,19J,Antofagasta,Antofagasta,Antofagasta
+1893,427798.7,7698114.68,19K,Tarapacá,Tamarugal,Pozo Almonte
+1897,448577.0,7408440.87,19K,Antofagasta,Antofagasta,Sierra Gorda
+1898,511173.994246816,7528505.03605954,19K,Antofagasta,El Loa,Calama
+1899,390122.999997656,7406679.01092068,19K,Antofagasta,Antofagasta,Antofagasta
+1901,440390.999999959,7543344.01041644,19K,Antofagasta,Tocopilla,María Elena
+1902,354648.94,7445230.31,19K,Antofagasta,Antofagasta,Mejillones
+1903,561296.71,7399142.03,19K,Antofagasta,El Loa,San Pedro de Atacama
+1904,356356.19,7446047.45,19K,Antofagasta,Antofagasta,Mejillones
+1908,375102.999996351,7555952.01064523,19K,Antofagasta,Tocopilla,Tocopilla
+1909,493354.39,7327678.68,19J,Antofagasta,Antofagasta,Antofagasta
+1910,376124.47,7379326.58,19K,Antofagasta,Antofagasta,Antofagasta
+1911,493488.65,7307355.63,19J,Antofagasta,Antofagasta,Antofagasta
+1915,380489.94,7765337.26,19K,Tarapacá,Iquique,Iquique
+1916,381795.55,7763961.0,19K,Tarapacá,Iquique,Iquique
+1917,365815.999997962,7956453.0095117,19K,Arica y Parinacota,Arica,Arica
+1918,489363.86,7317763.59,19J,Antofagasta,Antofagasta,Antofagasta
+1919,419118.0,7759834.33,19K,Tarapacá,Tamarugal,Pozo Almonte
+1920,363824.99,7955510.0,19K,Arica y Parinacota,Arica,Arica
+1922,455217.4,7333121.01,19J,Antofagasta,Antofagasta,Antofagasta
+1924,363281.0,7961886.3,19K,Arica y Parinacota,Arica,Arica
+1925,513363.19,7545440.47,19K,Antofagasta,El Loa,Calama
+1926,445761.999999989,7530614.01044528,19K,Antofagasta,Tocopilla,María Elena
+1929,512755.57,7529512.96,19K,Antofagasta,El Loa,Calama
+1930,463190.31,7470100.37,19K,Antofagasta,Antofagasta,Sierra Gorda
+1933,530964.65,7504205.26,19K,Antofagasta,El Loa,Calama
+1935,471187.000000028,7478136.01057111,19K,Antofagasta,Antofagasta,Sierra Gorda
+1936,490290.000000011,7317939.01095819,19J,Antofagasta,Antofagasta,Antofagasta
+1937,355227.45,7376639.48,19K,Antofagasta,Antofagasta,Antofagasta
+1939,427575.69,7740734.85,19K,Tarapacá,Tamarugal,Pozo Almonte
+1946,389935.06,7548574.9,19K,Antofagasta,Tocopilla,Tocopilla
+1947,408637.0,7815629.0,19K,Tarapacá,Tamarugal,Huara
+1948,392516.62,7863852.49,19K,Tarapacá,Tamarugal,Huara
+1949,375870.01031468,7881134.03103922,19K,Arica y Parinacota,Arica,Camarones
+1951,400782.33,7830611.89,19K,Tarapacá,Tamarugal,Huara
+1955,432336.58,7535966.13,19K,Antofagasta,Tocopilla,María Elena
+1956,365612.29,7370899.61,19K,Antofagasta,Antofagasta,Antofagasta
+1962,409107.999999098,7363508.01093323,19K,Antofagasta,Antofagasta,Antofagasta
+1963,451189.999999996,7335907.01092314,19J,Antofagasta,Antofagasta,Antofagasta
+1964,472435.000000021,7323853.01094513,19J,Antofagasta,Antofagasta,Antofagasta
+1965,432063.6,7536161.94,19K,Antofagasta,Tocopilla,María Elena
+1966,365081.91,7369250.07,19K,Antofagasta,Antofagasta,Antofagasta
+1968,419872.8,7355889.09,19K,Antofagasta,Antofagasta,Antofagasta
+1969,368271.999998048,7940778.00954142,19K,Arica y Parinacota,Arica,Arica
+1972,538778.28,7379992.66,19K,Antofagasta,El Loa,San Pedro de Atacama
+1981,364201.34,7386845.17,19K,Antofagasta,Antofagasta,Antofagasta
+1984,375938.88,7698808.47,19K,Tarapacá,Iquique,Iquique
+1985,374976.99,7555842.01,19K,Antofagasta,Tocopilla,Tocopilla
+1987,369971.13,7389270.79,19K,Antofagasta,Antofagasta,Antofagasta
+1989,493332.66,7327443.68,19J,Antofagasta,Antofagasta,Antofagasta
+1998,324853.46,6032862.85,19H,Maule,Talca,San Clemente
+2002,288114.16,6404266.09,19H,Valparaíso,Petorca,La Ligua
+2003,311978.35,6776456.22,19J,Atacama,Huasco,Vallenar
+2006,735613.0,6083903.0,18H,Maule,Talca,Constitución
+2010,355564.4,7445658.6,19K,Antofagasta,Antofagasta,Mejillones
+2011,365021.42,7438564.44,19K,Antofagasta,Antofagasta,Mejillones
+2018,761638.61,5828614.62,18H,Biobío,Biobío,Santa Bárbara
+2019,369561.12,7274093.02,19J,Antofagasta,Antofagasta,Taltal
+2021,734802.47,5763583.62,18H,La Araucanía,Malleco,Victoria
+2022,457897.26,7404786.15,19K,Antofagasta,Antofagasta,Sierra Gorda
+2023,587451.56,7582625.51,19K,Antofagasta,El Loa,Ollagüe
+2024,503230.59,7470277.68,19K,Antofagasta,Antofagasta,Sierra Gorda
+2026,401323.999998053,7095594.011562,19J,Atacama,Chañaral,Chañaral
+2029,236086.0,6009643.0,19H,Maule,Linares,Parral
+2030,233198.0,6002864.0,19H,Maule,Linares,Parral
+2033,390266.0,6985167.0,19J,Atacama,Copiapó,Copiapó
+2036,528708.49,7568828.91,19K,Antofagasta,El Loa,Calama
+2043,445835.99999999,7520558.01047138,19K,Antofagasta,Tocopilla,María Elena
+2048,375193.52,7393084.1,19K,Antofagasta,Antofagasta,Antofagasta
+2054,719776.43,5500338.86,18G,Los Ríos,Ranco,Río Bueno
+2055,261801.76,6795514.82,19J,Atacama,Huasco,Freirina
+2057,450371.0,7533829.0,19K,Antofagasta,Tocopilla,María Elena
+2058,380175.74,6287120.97,19H,Metropolitana de Santiago,Cordillera,San José de Maipo
+2060,680007.7,5552077.87,18G,Los Ríos,Valdivia,Paillaco
+2061,748210.83,5902506.45,18H,Ñuble,Diguillín,Pemuco
+2064,355852.546,7446240.797,19K,Antofagasta,Antofagasta,Mejillones
+2070,401215.42,7095179.2607,19J,Atacama,Chañaral,Diego de Almagro
+2071,291387.0,6361182.0,19H,Valparaíso,Quillota,Quillota
+2078,654239.93,5588173.86,18H,Los Ríos,Valdivia,Valdivia
+2079,250768.22,6552373.28,19J,Coquimbo,Limarí,Ovalle
+2086,374335.791137926,6133652.16954803,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,San Fernando
+2089,326224.72139463,6159787.13346509,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,Chimbarongo
+2090,331932.8,6284898.47,19H,Metropolitana de Santiago,Talagante,Padre Hurtado
+2091,657389.0,5431607.0,18G,Los Lagos,Llanquihue,Llanquihue
+2094,450834.0,7480033.0,19K,Antofagasta,Tocopilla,María Elena
+2096,263709.89,6805412.51,19 J,Atacama,Huasco,Freirina
+2097,515070.24,7529230.21,19 K,Antofagasta,El Loa,Calama
+2098,441598.56,7658865.54,19K,Tarapacá,Tamarugal,Pozo Almonte
+2101,749107.87,5686831.79,18H,La Araucanía,Cautín,Cunco
+2103,702559.65,5810991.36,18H,La Araucanía,Malleco,Angol
+2105,305139.04,6150994.29,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,Chimbarongo
+2109,644675.83,5854135.01,18H,Biobío,Arauco,Curanilahue
+2111,652083.47,5483132.54,18G,Los Lagos,Osorno,Río Negro
+2119,724292.6,5848710.25,18H,Biobío,Biobío,Los Angeles
+2121,700896.0,5499391.0,18G,Los Ríos,Ranco,Río Bueno
+2122,717985.34,5827627.45,18H,La Araucanía,Malleco,Renaico
+2123,624490.6,5373782.8,18F,Los Lagos,Llanquihue,Calbuco
+2124,679810.27,5552200.04,18G,Los Ríos,Valdivia,Paillaco
+2135,446846.132,7604765.997,19 SUR,Antofagasta,Tocopilla,María Elena
+2136,342526.0,6307778.0,19H,Metropolitana de Santiago,Santiago,Quilicura
+2141,304237.68,6139442.19,19H,Maule,Curicó,Teno
+2143,313651.0,6777839.0,19J,Atacama,Huasco,Vallenar
+2145,301025.0,6552727.0,19J,Coquimbo,Limarí,Combarbalá
+2146,265810.9,6463355.56,19J,Coquimbo,Choapa,Los Vilos
+2148,670429.02,5415406.15,18G,Los Lagos,Llanquihue,Puerto Montt
+2150,748054.48,5915037.5,18H,Ñuble,Diguillín,Bulnes
+2152,679484.0,5576765.0,18H,Los Ríos,Valdivia,Los Lagos
+2153,726534.46,5481066.24,18G,Los Lagos,Osorno,Puyehue
+2154,726367.17,5481180.29,18G,Los Lagos,Osorno,Puyehue
+2155,726378.0,5481176.0,18G,Los Lagos,Osorno,Puyehue
+2157,759140.47,5940597.37,18H,Ñuble,Diguillín,Chillán Viejo
+2164,721772.87,5399206.93,18G,Los Lagos,Llanquihue,Cochamó
+2165,251317.0,5822718.0,19H,Biobío,Biobío,Santa Bárbara
+2166,596267.48,5298736.56,18G,Los Lagos,Chiloé,Castro
+2167,716704.0,5873973.0,18H,Biobío,Biobío,Laja
+2174,362772.0,7439809.0,PENDIENTE,Antofagasta,Antofagasta,Mejillones
+2180,386562.0,7472675.0,PENDIENTE,Antofagasta,Antofagasta,Mejillones
+2181,390533.0,7101853.0,19F,Atacama,Chañaral,Chañaral
+2185,732434.0,5497388.0,18G,Los Ríos,Ranco,Río Bueno
+2190,724049.0,5469485.0,18G,Los Lagos,Osorno,Puerto Octay
+2191,724252.8,5470257.62,18G,Los Lagos,Osorno,Puerto Octay
+2195,286451.0,6662248.0,19J,Coquimbo,Elqui,Coquimbo
+2197,738185.2,5786141.45,18H,La Araucanía,Malleco,Ercilla
+2198,449119.9537,7698940.6652,19 K,Tarapacá,Tamarugal,Pozo Almonte
+2207,704484.63,5685620.86,18S.Zona H,La Araucanía,Cautín,Freire
+2208,653637.205,5510190.683,18G,Los Lagos,Osorno,Osorno
+2209,660504.34,5510151.85,18G,Los Lagos,Osorno,Osorno
+2211,336380.85,6311887.59,19H,Metropolitana de Santiago,Chacabuco,Lampa
+2212,,,19J,Antofagasta,Antofagasta,Antofagasta
+2213,382376.876,6745438.003,19J,Atacama,Huasco,Alto del Carmen
+2215,321053.0,6368801.0,19H,Valparaíso,San Felipe de Aconcagua,Panquehue
+2217,759879.0,5882811.0,18 H,Ñuble,Diguillín,Yungay
+2221,437970.398,7563373.413,19S,Antofagasta,Tocopilla,María Elena
+2224,666928.0,5427874.0,18H,Los Lagos,Llanquihue,Llanquihue
+2226,507913.5,7519683.0,19K,Antofagasta,El Loa,Calama
+2229,751989.06,5923817.57,18H,Ñuble,Diguillín,Bulnes
+2231,742954.85,5929853.63,18H,Ñuble,Diguillín,Bulnes
+2238,292732.86,6269710.94,19H,Metropolitana de Santiago,Melipilla,Melipilla
+2239,398358.0,7697514.0,19K,Tarapacá,Tamarugal,Pozo Almonte
+2243,376947.0,7702306.0,19K,Tarapacá,Iquique,Iquique
+2244,662998.85,5901194.64,18H,,,
+2247,518209.0,7514030.0,19K,Antofagasta,El Loa,Calama
+2248,506743.0,7530484.0,19K,Antofagasta,El Loa,Calama
+2249,337192.0,6881867.0,19J,Atacama,Huasco,Vallenar
+2250,486715.93,7462926.19,19J,Antofagasta,Antofagasta,Sierra Gorda
+2252,,,19K,Tarapacá,Tamarugal,Pica
+2253,523909.0,7506225.0,19J,Antofagasta,El Loa,Calama
+2258,609487.65,5353961.08,18H,Los Lagos,Chiloé,Ancud
+2259,257401.819,6218411.78,19J,Libertador Gral. Bernardo O'Higgins,Cardenal Caro,Litueche
+2260,519563.0,7513452.0,19K,Antofagasta,El Loa,Calama
+2264,381281.0,6915285.0,19J,Atacama,Copiapó,Tierra Amarilla
+2270,270668.0,5842007.0,19H,Biobío,Biobío,Santa Bárbara
+2272,379260.42,7409924.94,19K,Antofagasta,Antofagasta,Antofagasta
+2276,759759.415,5882844.0,18H,Ñuble,Diguillín,Yungay
+2284,403785.05,7094054.08,19J,Atacama,Chañaral,Diego de Almagro
+2286,441316.91,7544346.74,19F,Antofagasta,Tocopilla,María Elena
+2287,659953.8702,5451733.0173,18F,Los Lagos,Llanquihue,Frutillar
+2288,359868.0,7390353.0,19K,Antofagasta,Antofagasta,Antofagasta
+2289,254790.0,6335985.0,19H,Valparaíso,Valparaíso,Valparaíso
+2290,258708.31,6304896.48,19F,Valparaíso,San Antonio,Algarrobo
+2291,686093.0,5902303.0,18H,Biobío,Concepción,Hualqui
+2294,,,19H,Ñuble,Diguillín,San Ignacio
+2297,721591.0,5722226.0,18H,La Araucanía,Cautín,Lautaro
+2299,408000.0,7086800.0,19F,Atacama,Chañaral,Diego de Almagro
+2302,,,18H,La Araucanía,Cautín,Nueva Imperial
+2305,,,18H,Biobío,Biobío,Mulchén
+2306,,,19F,Valparaíso,San Felipe de Aconcagua,Llaillay
+2309,543230.43,7556765.76,19K,Antofagasta,El Loa,Calama
+2312,,,18H,La Araucanía,Cautín,Loncoche
+2317,410784.0,7363299.0,19F,Antofagasta,Antofagasta,Antofagasta
+2319,375123.0,6923024.0,19J,Atacama,Copiapó,Tierra Amarilla
+2320,267902.793,6369687.254,19H,Valparaíso,Valparaíso,Quintero
+2322,371425.0,6154694.0,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,San Fernando
+2329,738872.0,5863454.8,18H,Biobío,Biobío,Los Angeles
+2330,721816.9,5857691.8,18H,Biobío,Biobío,Los Angeles
+2331,737074.26,5851555.87,18H,Biobío,Biobío,Los Angeles
+2332,292080.0,6627004.0,19J,Coquimbo,Limarí,Ovalle
+2333,544169.36,7344751.04,19J,Antofagasta,Antofagasta,Antofagasta
+2337,404375.4,7059057.99,19J,Atacama,Chañaral,Diego de Almagro
+2339,450315.1,7537701.0,19K,Antofagasta,Tocopilla,María Elena
+2346,347564824.0,6365699088.0,19K,Valparaíso,Los Andes,Los Andes
+2347,759341.97,5928197.46,18H,Ñuble,Diguillín,San Ignacio
+2350,350963.0,6277413.0,19H,Metropolitana de Santiago,Cordillera,Puente Alto
+2351,250644.0,5822257.0,19H,Biobío,Biobío,Quilaco
+2357,307861.84,6188376.21,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,San Vicente
+2362,298916.73,6162890.86,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,Nancagua
+2363,283959.39,6166361.49,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,Santa Cruz
+2376,307643.547,6679268.548,19J,Coquimbo,Elqui,Vicuña
+2377,374591.6,7913385.71,19K,Arica y Parinacota,Arica,Camarones
+2378,258259.0,6795074.0,19J,Atacama,Huasco,Freirina
+2380,316249.949,6368215.207,19H,Valparaíso,San Felipe de Aconcagua,Catemu
+2381,438883.09,7527154.03,19K,Antofagasta,Tocopilla,María Elena
+2382,414107.0,7256270.0,19J,Antofagasta,Antofagasta,Antofagasta
+2383,345495.0,6233897.0,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Codegua
+2385,253588.0,6225184.0,19H,Libertador Gral. Bernardo O'Higgins,Cardenal Caro,Litueche
+2388,323100.0,6809250.0,19J,Atacama,Huasco,Vallenar
+2395,702918.0,5871274.0,18H,Biobío,Biobío,Laja
+2397,304350.0,6144900.0,19H,Maule,Curicó,Teno
+2411,291976.0,6626939.0,19J,Coquimbo,Limarí,Ovalle
+2412,324045.46,6467392.2,19J,Coquimbo,Choapa,Salamanca
+2414,443414.85,7537990.54,19K,Antofagasta,Tocopilla,María Elena
+2418,713708.387,5812910.435,18H,La Araucanía,Malleco,Renaico
+2427,708579.873,5808473.51,18H,La Araucanía,Malleco,Angol
+2433,340999.22,6312614.67,19H,Metropolitana de Santiago,Chacabuco,Colina
+2434,249705.0,6579553.0,19J,Coquimbo,Limarí,Ovalle
+2437,364457.68,7369382.5,19K,Antofagasta,Antofagasta,Antofagasta
+2438,326678.65,6852228.65,19J,Atacama,Huasco,Vallenar
+2439,328905.6,6844187.7,19J,Atacama,Huasco,Vallenar
+2447,273939.8479,6311252.5782,19H,Valparaíso,Valparaíso,Casablanca
+2450,236059.0,6009553.0,19H,Maule,Linares,Retiro
+2451,398205.09,7697915.0,19K,Tarapacá,Tamarugal,Pozo Almonte
+2453,331228.0,6351800.0,19H,Metropolitana de Santiago,Santiago,Tiltil
+2456,400901.0,7242842.0,19J,Antofagasta,Antofagasta,Taltal
+2458,516543.07,7315759.63,19J,Antofagasta,Antofagasta,Antofagasta
+2472,259745.7497,6073558.6389,19H,Maule,Talca,Talca
+2473,329302.62,6334314.14,19H,Metropolitana de Santiago,Chacabuco,Tiltil
+2474,254349.0,6303220.0,19H,Valparaíso,San Antonio,Algarrobo
+2476,383015.0,6917030.0,19J,Atacama,Copiapó,Tierra Amarilla
+2477,713205.76,5830407.72,18H,La Araucanía,Malleco,Renaico
+2491,418080.0,7248380.0,19J,Antofagasta,Antofagasta,Taltal
+2496,286498.83475,6406559.8475,19H,Valparaíso,Petorca,La Ligua
+2509,434033.0,7758109.75,19K,Tarapacá,Tamarugal,Pozo Almonte
+2511,368451.23,6153148.05,19H,Libertador Gral. Bernardo O'Higgins,Colchagua,San Fernando
+2513,428575.98,7687408.18,19K,Tarapacá,Tamarugal,Pozo Almonte
+2515,525379.6,7420658.4,19K,Antofagasta,Antofagasta,Sierra Gorda
+2517,335892.296,6190298.328,19H,Libertador Gral. Bernardo O'Higgins,Cachapoal,Rengo
+2525,441536.41,7539740.19,19K,Antofagasta,Tocopilla,María Elena
+2533,421608.081873,7232349.31195,19J,Antofagasta,Antofagasta,Taltal

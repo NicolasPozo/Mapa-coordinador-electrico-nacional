@@ -5,25 +5,36 @@
 Al arrancar lanza `actualizar()` en segundo plano y lo repite cada
 NODOS_ACTUALIZAR_CADA_HORAS (6 por defecto; 0 = solo al arrancar).
 Con NODOS_SIN_ACTUALIZAR=1 solo sirve lo que ya hay en data/nodos.duckdb.
+POST /api/ampliar pide más historia y adelanta el siguiente ciclo
+(se desactiva con NODOS_PERMITIR_AMPLIAR=0, útil si el mapa es público).
 """
 
 from __future__ import annotations
 
 import threading
 from contextlib import asynccontextmanager
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi import Body, FastAPI, HTTPException, Query
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 
 from . import config, servicio
-from .actualizar import actualizar, leer_estado
+from .actualizar import (
+    MINUTOS_POR_DIA,
+    OPCIONES_AMPLIAR,
+    actualizar,
+    ampliar_ventana,
+    leer_estado,
+    ventana_actual,
+)
 
 WEB = config.RAIZ / "web"
 _bloqueo = threading.Lock()
 _detener = threading.Event()
+_despertar = threading.Event()  # adelanta el siguiente ciclo (p. ej. al pedir más datos)
 _cache: dict = {}
+_hilo: threading.Thread | None = None
 
 
 def _horas() -> float:
@@ -33,8 +44,13 @@ def _horas() -> float:
         return 6.0
 
 
+def _permite_ampliar() -> bool:
+    return _hilo is not None and config.obtener("NODOS_PERMITIR_AMPLIAR", "1") not in ("0", "false", "no")
+
+
 def _ciclo() -> None:
     while not _detener.is_set():
+        _despertar.clear()
         if _bloqueo.acquire(blocking=False):
             try:
                 actualizar()
@@ -42,18 +58,19 @@ def _ciclo() -> None:
             finally:
                 _bloqueo.release()
         horas = _horas()
-        if horas <= 0 or _detener.wait(horas * 3600):
-            break
+        # Espera hasta el próximo ciclo; con 0 horas solo despierta si se piden más datos.
+        _despertar.wait(horas * 3600 if horas > 0 else None)
 
 
 @asynccontextmanager
 async def _vida(app: FastAPI):
-    hilo = None
+    global _hilo
     if config.obtener("NODOS_SIN_ACTUALIZAR", "0") not in ("1", "true", "si", "sí"):
-        hilo = threading.Thread(target=_ciclo, name="actualizador", daemon=True)
-        hilo.start()
+        _hilo = threading.Thread(target=_ciclo, name="actualizador", daemon=True)
+        _hilo.start()
     yield
     _detener.set()
+    _despertar.set()
 
 
 app = FastAPI(title="Nodos del SEN", lifespan=_vida, docs_url="/api/docs", redoc_url=None)
@@ -79,6 +96,17 @@ def inicio():
     return FileResponse(WEB / "index.html", headers={"Cache-Control": "no-cache"})
 
 
+@app.get("/2d", include_in_schema=False)
+@app.get("/3d", include_in_schema=False)
+def enlaces_antiguos():
+    return RedirectResponse("/", status_code=308)
+
+
+@app.get("/ampliar.js", include_in_schema=False)
+def ampliar_js():
+    return FileResponse(WEB / "ampliar.js", media_type="text/javascript", headers={"Cache-Control": "no-cache"})
+
+
 @app.get("/salud", include_in_schema=False)
 def salud():
     return {"ok": True}
@@ -89,8 +117,33 @@ def estado():
     """Última actualización, paso en curso y resultado de los tests de dbt."""
     e = leer_estado()
     e["hay_datos"] = servicio.BASE.exists()
+    if e.get("en_curso") and e.get("inicio"):
+        # Se calcula aquí para no depender de la zona horaria del navegador.
+        try:
+            e["transcurrido_s"] = max(0, round((datetime.now() - datetime.fromisoformat(e["inicio"])).total_seconds()))
+        except ValueError:
+            pass
     e["actualizar_cada_horas"] = _horas()
+    e["ventana"] = ventana_actual()
+    e["ampliar"] = {
+        "permitido": _permite_ampliar(),
+        "opciones": [{"dias": d, "minutos": d * MINUTOS_POR_DIA} for d in OPCIONES_AMPLIAR],
+    }
     return JSONResponse(e, headers={"Cache-Control": "no-cache"})
+
+
+@app.post("/api/ampliar")
+def ampliar(dias: int = Body(..., embed=True, description=f"Días de historia de demanda real: {OPCIONES_AMPLIAR}")):
+    """Pide más historia: la guarda y adelanta el siguiente ciclo de actualización."""
+    if not _permite_ampliar():
+        raise HTTPException(status_code=403, detail="Este servidor no permite pedir más datos.")
+    try:
+        ventana = ampliar_ventana(dias)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+    ocupado = _bloqueo.locked()  # antes de despertar: si no, el ciclo recién lanzado cuenta como "en curso"
+    _despertar.set()
+    return {"ok": True, "ventana": ventana_actual(), "pedido": ventana, "en_curso": ocupado}
 
 
 @app.get("/api/dias")
@@ -120,7 +173,7 @@ def pronostico(dia: date | None = Query(None, description="AAAA-MM-DD; por defec
 
 @app.get("/api/base")
 def base():
-    """Contornos de Chile y países vecinos (Natural Earth 1:50m)."""
+    """Contornos de Chile y países vecinos (Natural Earth 1:50m), para el mapa base «Mínimo»."""
     from .mapa import base_mapa
 
     if "base" not in _cache:

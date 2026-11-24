@@ -4,8 +4,8 @@
     python -m nodos actualizar                  # un ciclo: descargar -> geo -> dbt build
     python -m nodos descargar pronostico --desde 2026-11-15 --hasta 2026-11-20
     python -m nodos geo
+    python -m nodos semilla                     # guarda las fichas en semilla/ (para el repo)
     python -m nodos dbt build
-    python -m nodos mapa                        # exportación estática (HTML con datos incrustados)
     python -m nodos estado
 """
 
@@ -84,12 +84,10 @@ def cmd_geo(args) -> None:
     construir_nodos(refrescar=args.refrescar)
 
 
-def cmd_mapa(args) -> None:
-    from pathlib import Path
+def cmd_semilla(args) -> None:
+    from .infotecnica import exportar_semilla
 
-    from .mapa import generar
-
-    generar(args.dia, args.dia_pronostico, Path(args.salida) if args.salida else None, args.sin_envoltura)
+    exportar_semilla()
 
 
 def cmd_dbt(args) -> None:
@@ -147,6 +145,9 @@ def main(argv=None) -> None:
     g = sub.add_parser("geo", help="ubica las barras con coordenadas de Infotécnica (data/processed/nodos.parquet)")
     g.add_argument("--refrescar", action="store_true", help="vuelve a bajar catálogo y fichas")
     g.set_defaults(func=cmd_geo)
+    sub.add_parser(
+        "semilla", help="guarda las coordenadas de las fichas en semilla/ (evita bajarlas en el primer arranque)"
+    ).set_defaults(func=cmd_semilla)
 
     t = sub.add_parser("dbt", help="transformaciones y tests con dbt + DuckDB (por defecto: build)")
     t.add_argument("argumentos", nargs=argparse.REMAINDER, help="argumentos para dbt, p. ej. build, test, docs generate")
@@ -162,12 +163,6 @@ def main(argv=None) -> None:
     s.add_argument("--sin-actualizar", action="store_true", help="solo servir lo que ya hay (sin ciclo de actualización)")
     s.set_defaults(func=cmd_servir)
 
-    m = sub.add_parser("mapa", help="exporta el mapa con los datos incrustados (salida/mapa.html)")
-    m.add_argument("--dia", type=_fecha, help="día de demanda y costo marginal (por defecto el último con ambos)")
-    m.add_argument("--dia-pronostico", type=_fecha, help="día del pronóstico (por defecto el último)")
-    m.add_argument("--salida", help="ruta del HTML (por defecto salida/mapa.html)")
-    m.add_argument("--sin-envoltura", action="store_true", help="sin <html>/<head>/<body> (formato Artifact)")
-    m.set_defaults(func=cmd_mapa)
 
     args = p.parse_args(argv)
     try:

@@ -7,27 +7,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
-/* Layout: Chile es largo y angosto -> mapa alto a la izquierda, panel de lectura a la derecha; en teléfono se apilan. */
+/* Mapa a pantalla completa; los controles flotan encima.
+   Agujas: una columna fina por subestación; altura = energía de la hora, color = costo marginal. */
 :root {
-  --bg: #EDF1EF;
-  --surface: #F8FAF9;
-  --ink: #17201E;
-  --muted: #5A6A66;
-  --line: #D2DBD7;
-  --sea: #DCE5E6;
-  --land: #E3E8E5;
-  --land-cl: #FBFCFB;
-  --border: #A7B4B0;
-  --accent: #A85A22;          /* cobre: el conductor de la red */
-  --accent-soft: #A85A2222;
-  --p0: #1C7486;              /* costo marginal bajo */
-  --p1: #DDAE3F;              /* medio */
-  --p2: #B03F2B;              /* alto */
-  --ok: #2F7D4F;
-  --warn: #B07A12;
-  --bad: #B03F2B;
-  --halo: #FFFFFFCC;
+  --bg: #EDF1EF; --surface: #F8FAF9; --ink: #17201E; --muted: #5A6A66; --line: #D2DBD7; --border: #A7B4B0;
+  --accent: #A85A22; --p0: #1C7486; --p1: #DDAE3F; --p2: #B03F2B; --sinprecio: #8E9A96;
+  --mar: #C5D5DA; --tierra: #E0E6E3; --tierra-cl: #FBFCFB;
   --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
   --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
@@ -35,564 +22,472 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0F1514; --surface: #151D1B; --ink: #E4EBE8; --muted: #91A29D; --line: #26322E;
-    --sea: #0B1110; --land: #1A2321; --land-cl: #22302C; --border: #3D4C47;
-    --accent: #DB8D52; --accent-soft: #DB8D5233;
-    --p0: #3AA3B6; --p1: #E7C25E; --p2: #E26A50; --ok: #5DBB83; --warn: #E0B04A; --bad: #E26A50; --halo: #0F1514CC;
-    color-scheme: dark;
+    --bg: #0F1514; --surface: #151D1BEE; --ink: #E4EBE8; --muted: #91A29D; --line: #26322E; --border: #3D4C47;
+    --accent: #DB8D52; --p0: #3AA3B6; --p1: #E7C25E; --p2: #E26A50; --sinprecio: #6B7874;
+    --mar: #0B1110; --tierra: #1A2321; --tierra-cl: #22302C; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0F1514; --surface: #151D1B; --ink: #E4EBE8; --muted: #91A29D; --line: #26322E;
-  --sea: #0B1110; --land: #1A2321; --land-cl: #22302C; --border: #3D4C47;
-  --accent: #DB8D52; --accent-soft: #DB8D5233;
-  --p0: #3AA3B6; --p1: #E7C25E; --p2: #E26A50; --ok: #5DBB83; --warn: #E0B04A; --bad: #E26A50; --halo: #0F1514CC;
-  color-scheme: dark;
+  --bg: #0F1514; --surface: #151D1BEE; --ink: #E4EBE8; --muted: #91A29D; --line: #26322E; --border: #3D4C47;
+  --accent: #DB8D52; --p0: #3AA3B6; --p1: #E7C25E; --p2: #E26A50; --sinprecio: #6B7874;
+  --mar: #0B1110; --tierra: #1A2321; --tierra-cl: #22302C; color-scheme: dark;
 }
-
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
-:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
-body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 14px; line-height: 1.45; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 14px; line-height: 1.45; overflow: hidden; }
 [hidden] { display: none !important; }
-.app {
-  height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 12px;
-  padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
-}
-header.top { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 10px 24px; }
-h1 { font-family: var(--font-display); font-weight: 700; font-size: 26px; letter-spacing: -0.01em; margin: 0; line-height: 1.1; text-wrap: balance; }
-.sub { margin: 4px 0 0; color: var(--muted); display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
-.sub b { color: var(--ink); font-weight: 500; }
-.controles { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+#mapa { position: absolute; inset: 0; }
 
-.modos { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; padding: 3px; background: var(--surface); gap: 2px; flex-wrap: wrap; }
-.modos button { font: 500 13px var(--font-body); color: var(--muted); background: transparent; border: 0; border-radius: 6px; padding: 7px 12px; cursor: pointer; }
+.caja { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 6px 24px #0002; }
+.panel {
+  position: absolute; top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left));
+  width: min(380px, calc(100% - 24px)); padding: 14px; display: grid; gap: 10px; z-index: 2;
+}
+h1 { font-family: var(--font-display); font-weight: 700; font-size: 20px; margin: 0; line-height: 1.15; letter-spacing: -0.01em; }
+.sub { margin: 2px 0 0; color: var(--muted); font-size: 12px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+.sub a { color: var(--accent); }
+.fila { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+select { font: 500 13px var(--font-body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; cursor: pointer; max-width: 100%; }
+.modos { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; padding: 3px; gap: 2px; flex-wrap: wrap; }
+.modos button { font: 500 12px var(--font-body); color: var(--muted); background: transparent; border: 0; border-radius: 6px; padding: 6px 10px; cursor: pointer; }
 .modos button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
-select {
-  font: 500 13px var(--font-body); color: var(--ink); background: var(--surface); border: 1px solid var(--line);
-  border-radius: 8px; padding: 8px 10px; cursor: pointer; max-width: 100%;
-}
-.modos button:focus-visible, .btn:focus-visible, select:focus-visible, input[type=range]:focus-visible, .fila:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-.estado { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
-.estado i { width: 8px; height: 8px; border-radius: 50%; background: var(--border); display: inline-block; }
-.estado.ok i { background: var(--ok); }
-.estado.curso i { background: var(--warn); animation: pulso 1.4s ease-in-out infinite; }
-.estado.error i { background: var(--bad); }
-@keyframes pulso { 50% { opacity: 0.35; } }
-
-.grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 380px); gap: 14px; min-height: 0; }
-.mapa-wrap { position: relative; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--sea); }
-#mapa { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
-#mapa:active { cursor: grabbing; }
-.pais { fill: var(--land); stroke: var(--border); stroke-width: 0.6; vector-effect: non-scaling-stroke; }
-.pais.CHL { fill: var(--land-cl); }
-.nodo { stroke: var(--halo); stroke-width: 1; vector-effect: non-scaling-stroke; cursor: pointer; }
-.nodo.sel { stroke: var(--ink); stroke-width: 2.2; }
-.punto { stroke: none; pointer-events: none; }
-.zonas { position: absolute; top: 10px; left: 10px; display: flex; gap: 4px; flex-wrap: wrap; }
+.etq { font-size: 12px; color: var(--muted); }
+.modos button:disabled { opacity: 0.45; cursor: not-allowed; }
+.nota { margin: 0; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--accent); color: var(--ink); font-size: 12px; line-height: 1.4;
+  background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.nota b { font-weight: 600; }
+.nota .det { display: block; font: 11px var(--font-mono); color: var(--muted); margin-top: 2px; }
+.atraso { color: var(--muted); }
 .btn { font: 500 12px var(--font-body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 5px 9px; cursor: pointer; }
 .btn:hover { border-color: var(--border); }
 .btn.on { border-color: var(--accent); color: var(--accent); }
-.aviso {
-  position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center;
-  background: color-mix(in srgb, var(--sea) 85%, transparent);
-}
-.aviso div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; max-width: 360px; }
-.aviso strong { display: block; font: 700 16px var(--font-display); margin-bottom: 4px; }
-.aviso p { margin: 0; color: var(--muted); }
+button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-.leyenda {
-  position: absolute; left: 10px; bottom: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
-  padding: 8px 10px; display: grid; gap: 6px; font-size: 12px; color: var(--muted); max-width: calc(100% - 20px);
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.kpi { border-top: 2px solid var(--line); padding-top: 4px; }
+.kpi .k { font-size: 11px; color: var(--muted); }
+.kpi .v { font: 500 17px var(--font-mono); }
+.kpi .u { font-size: 11px; color: var(--muted); margin-left: 2px; }
+
+.hora {
+  position: absolute; left: 50%; transform: translateX(-50%); bottom: max(28px, env(safe-area-inset-bottom));
+  width: min(560px, calc(100% - 24px)); padding: 10px 12px; display: flex; gap: 10px; align-items: center; z-index: 2;
 }
+.hora input { flex: 1; accent-color: var(--accent); }
+.hora output { font: 500 15px var(--font-mono); min-width: 48px; text-align: right; }
+
+.leyenda { position: absolute; right: max(12px, env(safe-area-inset-right)); top: max(12px, env(safe-area-inset-top)); padding: 10px 12px; display: grid; gap: 6px; font-size: 12px; color: var(--muted); z-index: 2; max-width: 220px; }
 .leyenda .t { color: var(--ink); font-weight: 500; }
-.rampa { height: 8px; width: 170px; max-width: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--p0), var(--p1), var(--p2)); }
-.rampa-ejes { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; }
-.tamanos { display: flex; align-items: end; gap: 10px; }
-.tamanos span { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; font-family: var(--font-mono); font-size: 11px; }
-.tamanos i { display: block; border-radius: 50%; border: 1px solid var(--muted); }
+.rampa { height: 8px; width: 180px; border-radius: 4px; background: linear-gradient(90deg, var(--p0), var(--p1), var(--p2)); }
+.ejes { display: flex; justify-content: space-between; font: 11px var(--font-mono); }
+.ayuda { font-size: 11px; }
 
-.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 4px 16px #0002; min-width: 160px; z-index: 2; }
+.tip { position: absolute; pointer-events: none; z-index: 3; padding: 8px 10px; font-size: 12px; min-width: 170px; }
 .tip strong { display: block; font-size: 13px; }
 .tip .k { color: var(--muted); }
 
-aside.panel { min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 14px; }
-.bloque { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
-.hora { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; }
-.hora output { font: 500 22px var(--font-mono); font-variant-numeric: tabular-nums; min-width: 4.2ch; text-align: right; }
-#play { width: 34px; height: 34px; padding: 0; display: grid; place-items: center; font-size: 14px; }
-input[type=range] { width: 100%; accent-color: var(--accent); }
-.etiqueta { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
-.kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
-.kpi .v { font: 500 22px var(--font-mono); font-variant-numeric: tabular-nums; }
-.kpi .v small { font: 400 12px var(--font-body); color: var(--muted); margin-left: 3px; }
-.kpi .n { font-size: 12px; color: var(--muted); }
-#curva { display: block; width: 100%; height: 110px; overflow: visible; }
-#curva text, .mini text { fill: var(--muted); font: 10px var(--font-mono); }
-.eje line, .eje path { stroke: var(--line); }
-.lista { display: grid; gap: 2px; margin-top: 8px; }
-.fila { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 6px; border-radius: 6px; cursor: pointer; background: none; border: 0; text-align: left; font: inherit; color: inherit; width: 100%; }
-.fila:hover { background: var(--accent-soft); }
-.fila .nombre { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.fila .nombre small { color: var(--muted); margin-left: 4px; }
-.fila .val { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
-.dot { width: 10px; height: 10px; border-radius: 50%; }
-.detalle h2 { font: 700 18px var(--font-display); margin: 2px 0; text-wrap: balance; }
-.detalle .meta { color: var(--muted); font-size: 12px; }
-.barras { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
-.barras code { font: 11px var(--font-mono); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
-.mini { display: block; width: 100%; height: 90px; overflow: visible; margin-top: 4px; }
-.cab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-.nota { font-size: 12px; color: var(--muted); margin: 0; }
-.fuente { font-size: 11px; color: var(--muted); margin: 0; }
+.aviso { position: absolute; inset: 0; display: grid; place-items: center; z-index: 4; padding: 24px; background: color-mix(in srgb, var(--bg) 70%, transparent); }
+.aviso > div { padding: 16px 18px; max-width: 440px; max-height: calc(100% - 16px); overflow: auto; text-align: center; }
+.aviso strong { display: block; font: 700 16px var(--font-display); margin-bottom: 4px; }
+.aviso p { margin: 0; color: var(--muted); }
 
-@media (max-width: 860px) {
-  html, body { height: auto; }
-  .app { height: auto; }
-  .grid { grid-template-columns: minmax(0, 1fr); }
-  .mapa-wrap { height: 72vh; min-height: 420px; }
-  aside.panel { overflow: visible; }
-  h1 { font-size: 22px; }
+.maplibregl-ctrl-attrib { font-size: 10px; }
+@media (max-width: 700px) {
+  .panel { padding: 10px 12px; gap: 8px; }
+  h1 { font-size: 17px; }
+  .panel .desliza { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .panel .desliza > * { flex: none; }
+  .panel .desliza .modos { flex-wrap: nowrap; }
+  .kpi .k { font-size: 10px; }
+  .kpi .v { font-size: 14px; }
+  .leyenda { top: auto; bottom: 84px; right: 12px; padding: 6px 8px; gap: 4px; }
+  .leyenda .ayuda { display: none; }
+  .rampa { width: 140px; }
+  .hora { bottom: max(16px, env(safe-area-inset-bottom)); padding: 8px 10px; }
+  .maplibregl-ctrl-bottom-right { display: none; }
 }
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
 <body>
-<div class="app">
-  <header class="top">
-    <div>
-      <h1>Nodos del Sistema Eléctrico Nacional</h1>
-      <p class="sub"><span id="sub">Cargando datos…</span><span class="estado" id="estado" title=""><i></i><span id="estado-txt"></span></span></p>
-    </div>
-    <div class="controles">
-      <label for="dia" class="etiqueta" style="position:absolute;left:-9999px">Día</label>
-      <select id="dia" aria-label="Día" disabled></select>
-      <div class="modos" role="tablist" aria-label="Qué mostrar">
-        <button role="tab" id="m-demanda" aria-selected="true" data-modo="demanda">Demanda y precio</button>
-        <button role="tab" id="m-precio" aria-selected="false" data-modo="precio">Costo marginal</button>
-        <button role="tab" id="m-pron" aria-selected="false" data-modo="pron">Pronóstico</button>
-      </div>
-    </div>
-  </header>
+<div id="mapa" role="application" aria-label="Mapa 3D de Chile con las subestaciones del SEN"></div>
 
-  <main class="grid">
-    <section class="mapa-wrap" aria-label="Mapa de subestaciones">
-      <svg id="mapa" role="img" aria-label="Mapa de Chile con las subestaciones del SEN"></svg>
-      <div class="zonas" role="group" aria-label="Acercar a una zona">
-        <button class="btn on" data-zona="todo">Todo</button>
-        <button class="btn" data-zona="norte">Norte</button>
-        <button class="btn" data-zona="centro">Centro</button>
-        <button class="btn" data-zona="santiago">Santiago</button>
-        <button class="btn" data-zona="sur">Sur</button>
-      </div>
-      <div class="leyenda" id="leyenda"></div>
-      <div class="tip" id="tip" hidden></div>
-      <div class="aviso" id="aviso" hidden><div><strong id="aviso-t">Preparando datos</strong><p id="aviso-p"></p></div></div>
-    </section>
+<section class="panel caja" aria-label="Controles">
+  <div>
+    <h1>Nodos del SEN</h1>
+    <p class="sub"><span id="sub">Cargando…</span></p>
+  </div>
+  <p class="nota" id="nota" hidden></p>
+  <div class="fila">
+    <select id="dia" aria-label="Día" disabled></select>
+    <div class="modos" role="tablist" aria-label="Qué mostrar">
+      <button role="tab" aria-selected="true" data-modo="demanda">Demanda real</button>
+      <button role="tab" aria-selected="false" data-modo="pron">Pronóstico</button>
+    </div>
+    <button class="btn" id="mas-datos" hidden>Más datos</button>
+  </div>
+  <div class="fila desliza">
+    <span class="etq">Mapa</span>
+    <div class="modos" role="tablist" aria-label="Mapa base" id="fondos">
+      <button role="tab" data-fondo="claro">Claro</button>
+      <button role="tab" data-fondo="oscuro">Oscuro</button>
+      <button role="tab" data-fondo="voyager">Calles</button>
+      <button role="tab" data-fondo="satelite">Satélite</button>
+      <button role="tab" data-fondo="minimo">Mínimo</button>
+    </div>
+  </div>
+  <div class="fila desliza" role="group" aria-label="Volar a una zona">
+    <button class="btn on" data-zona="todo">Todo</button>
+    <button class="btn" data-zona="norte">Norte</button>
+    <button class="btn" data-zona="centro">Centro</button>
+    <button class="btn" data-zona="santiago">Santiago</button>
+    <button class="btn" data-zona="sur">Sur</button>
+  </div>
+  <div class="kpis" aria-live="polite">
+    <div class="kpi"><div class="k">Demanda del sistema</div><div><span class="v" id="k-dem">—</span><span class="u">MWh</span></div></div>
+    <div class="kpi"><div class="k">Costo marginal</div><div><span class="v" id="k-cmg">—</span><span class="u">USD/MWh</span></div></div>
+    <div class="kpi"><div class="k">Subestaciones</div><div><span class="v" id="k-n">—</span></div></div>
+  </div>
+</section>
 
-    <aside class="panel">
-      <div class="bloque">
-        <div class="hora">
-          <button class="btn" id="play" aria-label="Reproducir las 24 horas">▶</button>
-          <input type="range" id="hora" min="0" max="23" step="1" value="12" aria-label="Hora del día">
-          <output id="hora-txt" for="hora">12:00</output>
-        </div>
-      </div>
-      <div class="bloque">
-        <div class="kpis" id="kpis"></div>
-        <svg id="curva" aria-label="Curva diaria del sistema"></svg>
-        <p class="nota" id="nota-curva"></p>
-      </div>
-      <div class="bloque" id="caja"></div>
-      <p class="fuente">Fuente: Coordinador Eléctrico Nacional (CEN) - Datos Abiertos (API SIP e Infotécnica). Cada punto es una subestación; su demanda suma los retiros de todas sus barras.</p>
-    </aside>
-  </main>
+<aside class="leyenda caja" id="leyenda"></aside>
+
+<div class="hora caja">
+  <button class="btn" id="play" aria-label="Reproducir las 24 horas">▶</button>
+  <input type="range" id="hora" min="0" max="23" step="1" value="12" aria-label="Hora del día">
+  <output id="hora-txt" for="hora">12:00</output>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<div class="tip caja" id="tip" hidden></div>
+<div class="aviso" id="aviso" hidden><div class="caja"><strong id="aviso-t">Preparando datos</strong><p id="aviso-p"></p><div id="aviso-extra"></div></div></div>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/deck.gl@9.1.0/dist.min.js"></script>
+<script src="ampliar.js"></script>
 <script>
-// Exportación estática (python -m nodos mapa) incrusta aquí {dias, mapa, pron, base, estado}.
-// Servido por la app (python -m nodos servir), queda en null y los datos llegan de la API.
-const EMBEBIDO = /*__DATOS__*/null;
-
-(function () {
-  // ---------- utilidades ----------
-  const nf = (d) => new Intl.NumberFormat('es-CL', { maximumFractionDigits: d, minimumFractionDigits: d });
-  const f0 = nf(0).format;
-  const fmt = (v, dec) => v == null ? '—' : nf(dec).format(v);
-  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const fecha = (iso, corto) => iso ? new Date(iso + 'T12:00:00').toLocaleDateString('es-CL', corto
-    ? { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }
-    : { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '—';
-  const fechaHora = (iso) => iso ? new Date(iso).toLocaleString('es-CL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
+(() => {
+  const $ = (id) => document.getElementById(id);
   const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-  const hh = (h) => String(h).padStart(2, '0') + ':00';
-  const reducir = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const nf = (dec) => new Intl.NumberFormat('es-CL', { maximumFractionDigits: dec, minimumFractionDigits: dec });
+  const fmt = (v, dec = 0) => v == null ? '—' : nf(dec).format(v);
+  const reducir = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const oscuro = () => {
+    const t = document.documentElement.dataset.theme;
+    return t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  };
 
-  async function api(ruta) {
-    const r = await fetch(ruta, { cache: 'no-store' });
-    if (!r.ok) {
-      let detalle = r.statusText;
-      try { detalle = (await r.json()).detail || detalle; } catch (_) {}
-      const e = new Error(detalle); e.status = r.status; throw e;
-    }
-    return r.json();
+  // ---------- mapas base ----------
+  // CARTO (vectorial, sin clave), Esri World Imagery (satélite) y "mínimo": solo los contornos
+  // de Natural Earth que sirve el propio servidor (/api/base), sin depender de terceros.
+  const FONDOS = {
+    claro: () => 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+    oscuro: () => 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    voyager: () => 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+    satelite: () => ({
+      version: 8,
+      sources: { sat: {
+        type: 'raster', tileSize: 256, maxzoom: 19,
+        tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
+        attribution: 'Imágenes © Esri, Maxar, Earthstar Geographics',
+      } },
+      layers: [{ id: 'sat', type: 'raster', source: 'sat', paint: { 'raster-saturation': -0.25, 'raster-brightness-max': 0.85 } }],
+    }),
+    minimo: () => ({
+      version: 8,
+      sources: { base: { type: 'geojson', data: new URL('api/base', location.href).href, attribution: 'Contornos: Natural Earth' } },
+      layers: [
+        { id: 'mar', type: 'background', paint: { 'background-color': css('--mar') } },
+        { id: 'tierra', type: 'fill', source: 'base', paint: { 'fill-color': ['match', ['get', 'iso'], 'CHL', css('--tierra-cl'), css('--tierra')] } },
+        { id: 'borde', type: 'line', source: 'base', paint: { 'line-color': css('--border'), 'line-width': 0.8 } },
+      ],
+    }),
+  };
+  let fondo = null;
+  try { const f = localStorage.getItem('nodos3d.fondo'); if (f in FONDOS) fondo = f; } catch (e) {}
+  const fondoActual = () => fondo || (oscuro() ? 'oscuro' : 'claro');   // sin elección: sigue el tema
+
+  // Cámara inclinada mirando hacia el este, para que la cordillera quede de fondo.
+  const CAMARA = { pitch: 55, bearing: 25 };
+  const ZONAS = {
+    todo: [[-76.0, -44.0], [-66.5, -17.5]],
+    norte: [[-71.2, -27.5], [-67.0, -17.4]],
+    centro: [[-72.6, -36.5], [-69.8, -27.5]],
+    santiago: [[-71.2, -33.85], [-70.35, -33.2]],
+    sur: [[-74.4, -43.6], [-71.0, -36.3]],
+  };
+
+  let DIAS = null, DATOS = null, modo = 'demanda', hora = 12, timer = null, sel = null;
+  let pMax = 120, dMax = 1;
+
+  // ---------- color ----------
+  const hex = (h) => { h = h.replace('#', ''); return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)); };
+  const mezcla = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+  let RAMPA, SINPRECIO, ACENTO;
+  function paleta() { RAMPA = ['--p0', '--p1', '--p2'].map(v => hex(css(v))); SINPRECIO = hex(css('--sinprecio')); ACENTO = hex(css('--accent')); }
+  function colorPrecio(p) {
+    if (p == null) return SINPRECIO;
+    const t = Math.max(0, Math.min(1, p / pMax));
+    return t < 0.45 ? mezcla(RAMPA[0], RAMPA[1], t / 0.45) : mezcla(RAMPA[1], RAMPA[2], (t - 0.45) / 0.55);
   }
-
-  // ---------- estado ----------
-  let modo = 'demanda', hora = 12, sel = null, timer = null;
-  let DATOS = null, PRON = null, BASE = null, DIAS = null, ESTADO = null;
-  let diaDemanda = null, diaPron = null;
-  let color, radio, pMax = 120, dMax = 1, fMax = 1;
 
   // ---------- mapa ----------
-  const svg = d3.select('#mapa');
-  const g = svg.append('g');
-  const gPaises = g.append('g');
-  const gPuntos = g.append('g');
-  const gNodos = g.append('g');
-  const proyeccion = d3.geoMercator();
-  const path = d3.geoPath(proyeccion);
-  const ZONAS = {
-    todo: [[-76.2, -17.3], [-66.0, -44.2]],
-    norte: [[-71.2, -17.4], [-67.0, -27.5]],
-    centro: [[-72.6, -27.5], [-69.8, -36.5]],
-    santiago: [[-71.3, -33.15], [-70.3, -33.85]],
-    sur: [[-74.4, -36.3], [-71.0, -43.6]],
-  };
-  const caja = (z) => ({ type: 'Feature', geometry: { type: 'Polygon', coordinates: [[z[0], [z[1][0], z[0][1]], z[1], [z[0][0], z[1][1]], z[0]]] } });
-  let ancho = 0, alto = 0, k = 1;
+  const map = new maplibregl.Map({
+    container: 'mapa', style: FONDOS[fondoActual()](),
+    center: [-70.8, -33.0], zoom: 4.6, ...CAMARA,
+    maxPitch: 75, attributionControl: { compact: true },
+  });
+  map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right');
+  const overlay = new deck.MapboxOverlay({ interleaved: true, layers: [] });
+  map.addControl(overlay);
 
-  const zoom = d3.zoom().scaleExtent([1, 40]).on('zoom', (e) => { g.attr('transform', e.transform); k = e.transform.k; tamanos(); });
-  svg.call(zoom).on('dblclick.zoom', null);
-  const xy = (d) => proyeccion([d.lo, d.la]);
-
-  function ajustar() {
-    const r = svg.node().getBoundingClientRect();
-    if (!r.width || !r.height) return;
-    ancho = r.width; alto = r.height;
-    svg.attr('viewBox', `0 0 ${ancho} ${alto}`);
-    proyeccion.fitExtent([[12, 48], [ancho - 12, alto - 12]], caja(ZONAS.todo));
-    gPaises.selectAll('path').attr('d', path);
-    g.selectAll('circle').attr('cx', d => xy(d)[0]).attr('cy', d => xy(d)[1]);
-    zoom.translateExtent([[-ancho, -alto], [ancho * 2, alto * 2]]);
+  function marcarFondo() {
+    document.querySelectorAll('[data-fondo]').forEach(b => b.setAttribute('aria-selected', b.dataset.fondo === fondoActual()));
   }
+  function ponerFondo(f) {
+    fondo = f;
+    try { localStorage.setItem('nodos3d.fondo', f); } catch (e) {}
+    map.setStyle(FONDOS[f]());
+    marcarFondo();
+  }
+  document.querySelectorAll('[data-fondo]').forEach(b => b.addEventListener('click', () => ponerFondo(b.dataset.fondo)));
+  marcarFondo();
+
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    // Cambia el mapa si sigue al tema, o si es el mínimo (sus colores salen del tema).
+    if (!fondo || fondo === 'minimo') map.setStyle(FONDOS[fondoActual()]());
+    marcarFondo(); paleta(); dibujar(); leyenda();
+  });
 
   function irA(nombre, animar = true) {
-    const z = ZONAS[nombre];
-    const [[x0, y0], [x1, y1]] = [proyeccion(z[0]), proyeccion(z[1])];
-    const s = Math.min(40, 0.92 / Math.max((x1 - x0) / ancho, (y1 - y0) / (alto - 40)));
-    const t = d3.zoomIdentity.translate(ancho / 2, (alto + 36) / 2).scale(s).translate(-(x0 + x1) / 2, -(y0 + y1) / 2);
-    (animar && !reducir() ? svg.transition().duration(650) : svg).call(zoom.transform, t);
+    const ancho = innerWidth > 700;
+    const panel = document.querySelector('.panel').getBoundingClientRect();
+    const padding = ancho
+      ? { top: 60, bottom: 90, left: 400, right: 20 }
+      : { top: Math.min(innerHeight * 0.4, panel.bottom + 10), bottom: 80, left: 20, right: 20 };
+    map.fitBounds(ZONAS[nombre], { ...CAMARA, padding, duration: animar && !reducir() ? 2200 : 0, essential: true });
     document.querySelectorAll('[data-zona]').forEach(b => b.classList.toggle('on', b.dataset.zona === nombre));
   }
   document.querySelectorAll('[data-zona]').forEach(b => b.addEventListener('click', () => irA(b.dataset.zona)));
 
-  // ---------- escalas ----------
-  function escalas() {
-    const precios = (DATOS?.nodos || []).flatMap(n => n.p || []).filter(v => v != null).sort(d3.ascending);
-    pMax = Math.max(60, d3.quantile(precios, 0.97) || 120);
-    color = d3.scaleLinear().domain([0, pMax * 0.45, pMax]).range([css('--p0'), css('--p1'), css('--p2')]).clamp(true).interpolate(d3.interpolateLab);
-    dMax = d3.max((DATOS?.nodos || []).flatMap(n => n.d || []).filter(v => v != null)) || 1;
-    fMax = d3.max((PRON?.nodos || []).flatMap(n => n.f || []).filter(v => v != null)) || 1;
-    radio = d3.scaleSqrt().domain([0, Math.max(dMax, fMax)]).range([0, 26]);
-  }
+  // Grosor y altura se adaptan al zoom: a escala país las agujas deben verse, en Santiago no deben taparse.
+  const tamano = () => {
+    const z = map.getZoom();
+    return {
+      radio: Math.max(250, Math.min(9000, 2200 * Math.pow(2, 7 - z) ** 0.85)) * 0.3,
+      alturaMax: Math.max(4000, 380000 * Math.pow(2, 4.6 - z) ** 0.8) * 1.7,
+    };
+  };
+  map.on('zoom', () => dibujar());
 
-  const tip = document.getElementById('tip');
-  function mostrarTip(e, d) {
-    const wrap = svg.node().parentNode.getBoundingClientRect();
-    const filas = [];
-    if (modo === 'pron') filas.push(`<span class="k">Pronóstico</span> ${fmt(d.f?.[hora], 1)} MWh`);
-    else {
-      if (d.d) filas.push(`<span class="k">Demanda</span> ${fmt(d.d[hora], 1)} MWh`);
-      if (d.p) filas.push(`<span class="k">Costo marginal</span> ${fmt(d.p[hora], 1)} USD/MWh`);
-    }
-    tip.innerHTML = `<strong>${esc(d.n)}</strong><span class="k">${esc(d.c)}</span><br>${filas.join('<br>')}`;
-    tip.hidden = false;
-    const x = e.clientX - wrap.left + 14, y = e.clientY - wrap.top + 14;
-    tip.style.left = Math.min(x, wrap.width - tip.offsetWidth - 8) + 'px';
-    tip.style.top = Math.min(y, wrap.height - tip.offsetHeight - 8) + 'px';
-  }
-
-  const lista = () => (modo === 'pron' ? PRON?.nodos : DATOS?.nodos) || [];
-  function valor(d) {
-    if (modo === 'pron') return d.f?.[hora] ?? null;
-    if (modo === 'precio') return d.p?.[hora] ?? null;
-    return d.d?.[hora] ?? null;
-  }
+  // ---------- capas ----------
+  const serie = (n) => modo === 'pron' ? n.f : n.d;
+  const val = (n) => serie(n)?.[hora];
+  const colorDe = (n) => {
+    const c = modo === 'pron' ? ACENTO : colorPrecio(n.p?.[hora]);
+    return [...c, sel && sel !== n.id ? 90 : 255];
+  };
+  const transicion = (props) => reducir() ? {} : Object.fromEntries(props.map(p => [p, { duration: 450 }]));
 
   function dibujar() {
-    if (!ancho) return;
-    const ctx = modo === 'pron' ? [] : (DATOS?.nodos || []).filter(n => n.p);
-    gPuntos.selectAll('circle').data(ctx, d => d.id).join('circle').attr('class', 'punto')
-      .attr('cx', d => xy(d)[0]).attr('cy', d => xy(d)[1]);
-    let datos = lista().filter(d => valor(d) != null);
-    if (modo !== 'precio') datos = datos.filter(d => valor(d) > 0).sort((a, b) => valor(b) - valor(a));
-    gNodos.selectAll('circle').data(datos, d => modo + d.id).join(
-      enter => enter.append('circle').attr('class', 'nodo')
-        .on('pointerenter pointermove', mostrarTip).on('pointerleave', () => { tip.hidden = true; })
-        .on('click', (e, d) => { e.stopPropagation(); seleccionar(d); })
-    ).attr('cx', d => xy(d)[0]).attr('cy', d => xy(d)[1]).classed('sel', d => sel && d.id === sel.id);
-    tamanos();
-    panel();
+    if (!DATOS || !RAMPA) return;
+    const { radio, alturaMax } = tamano();
+    const disparo = [hora, modo, sel, pMax, RAMPA];
+    const datos = DATOS.nodos.filter(n => (val(n) ?? 0) > 0);
+    const comunes = {
+      data: datos, pickable: true, onHover: mostrarTip,
+      getPosition: n => [n.lo, n.la],
+      onClick: ({ object }) => { sel = object && sel !== object.id ? object.id : null; if (object && sel) volarA(object); dibujar(); },
+    };
+    $('k-n').textContent = fmt(datos.length);
+    overlay.setProps({
+      layers: [
+        new deck.ScatterplotLayer({
+          ...comunes, id: 'bases', radiusUnits: 'pixels', getRadius: 3, stroked: false,
+          getFillColor: colorDe, updateTriggers: { getFillColor: disparo },
+        }),
+        new deck.ColumnLayer({
+          ...comunes, id: 'agujas', diskResolution: 8, radius: radio, extruded: true,
+          elevationScale: alturaMax / dMax, getElevation: n => Math.max(0, val(n) ?? 0), getFillColor: colorDe,
+          material: { ambient: 0.85, diffuse: 0.35, shininess: 8, specularColor: [30, 30, 30] },
+          updateTriggers: { getElevation: disparo, getFillColor: disparo },
+          transitions: transicion(['getElevation', 'getFillColor']),
+        }),
+      ],
+    });
+  }
+  function volarA(n) {
+    map.flyTo({ center: [n.lo, n.la], zoom: Math.max(map.getZoom(), 9), ...CAMARA, duration: reducir() ? 0 : 1800, essential: true });
+  }
+  map.on('click', (e) => { if (!overlay.pickObject({ x: e.point.x, y: e.point.y })) { sel = null; dibujar(); } });
+
+  function mostrarTip({ object, x, y }) {
+    const tip = $('tip');
+    if (!object) { tip.hidden = true; return; }
+    const n = object, h = String(hora).padStart(2, '0') + ':00';
+    tip.innerHTML = `<strong></strong><div class="k"></div>` + (modo === 'pron'
+      ? `<div>Pronóstico ${h}: <b>${fmt(n.f?.[hora], 1)}</b> MWh</div>`
+      : `<div>Demanda ${h}: <b>${fmt(n.d?.[hora], 1)}</b> MWh</div><div>Costo marginal: <b>${fmt(n.p?.[hora], 1)}</b> USD/MWh</div>`);
+    tip.querySelector('strong').textContent = n.n;
+    tip.querySelector('.k').textContent = [n.c, n.r].filter(Boolean).join(' · ');
+    tip.hidden = false;
+    const w = tip.offsetWidth, hh = tip.offsetHeight;
+    tip.style.left = Math.min(innerWidth - w - 8, x + 14) + 'px';
+    tip.style.top = Math.max(8, Math.min(innerHeight - hh - 8, y + 14)) + 'px';
   }
 
-  function tamanos() {
-    if (!color) return;
-    const f = 1 / Math.pow(k, 0.75);
-    gPuntos.selectAll('circle').attr('r', 1.6 * f).attr('fill', d => d.p?.[hora] != null ? color(d.p[hora]) : css('--border')).attr('opacity', modo === 'demanda' ? 0.55 : 0);
-    gNodos.selectAll('circle')
-      .attr('r', d => (modo === 'precio' ? 4.2 : Math.max(2.2, radio(valor(d)))) * f)
-      .attr('fill', d => modo === 'pron' ? css('--accent') : (d.p?.[hora] != null ? color(d.p[hora]) : css('--border')))
-      .attr('fill-opacity', modo === 'pron' ? 0.55 : 0.88);
-  }
-
-  // ---------- panel ----------
+  // ---------- leyenda, KPIs, hora ----------
   function leyenda() {
-    const L = document.getElementById('leyenda');
-    if (!radio) { L.innerHTML = ''; return; }
-    const tam = (v) => `<span><i style="width:${2 * radio(v)}px;height:${2 * radio(v)}px"></i>${f0(v)}</span>`;
-    const pasos = [10, 100, 400].filter(v => v <= Math.max(dMax, fMax) * 1.2);
-    const tams = `<div><div class="t">${modo === 'pron' ? 'Pronóstico' : 'Demanda'} por hora (MWh)</div><div class="tamanos">${pasos.map(tam).join('')}</div></div>`;
-    const rampa = `<div><div class="t">Costo marginal (USD/MWh)</div><div class="rampa"></div><div class="rampa-ejes"><span>0</span><span>${f0(pMax * 0.45)}</span><span>${f0(pMax)}+</span></div></div>`;
-    L.innerHTML = modo === 'demanda' ? tams + rampa : modo === 'precio' ? rampa : tams;
-  }
-
-  function curva(svgSel, y, opciones = {}) {
-    const el = svgSel.node();
-    const w = el.getBoundingClientRect().width || 300, h = el.getBoundingClientRect().height || 100;
-    const m = { t: 8, r: 6, b: 18, l: 38 };
-    svgSel.attr('viewBox', `0 0 ${w} ${h}`).selectAll('*').remove();
-    const vals = (y || []).map((v, i) => ({ i, v })).filter(p => p.v != null);
-    if (!vals.length) { svgSel.append('text').attr('x', 0).attr('y', h / 2).text('Sin datos'); return; }
-    const x = d3.scaleLinear().domain([0, 23]).range([m.l, w - m.r]);
-    const yy = d3.scaleLinear().domain([Math.min(0, d3.min(vals, p => p.v)), d3.max(vals, p => p.v) || 1]).nice(3).range([h - m.b, m.t]);
-    svgSel.append('g').attr('class', 'eje').attr('transform', `translate(0,${h - m.b})`)
-      .call(d3.axisBottom(x).tickValues([0, 6, 12, 18, 23]).tickFormat(v => String(v).padStart(2, '0')).tickSize(3));
-    svgSel.append('g').attr('class', 'eje').attr('transform', `translate(${m.l},0)`)
-      .call(d3.axisLeft(yy).ticks(3).tickFormat(v => nf(0).format(v)).tickSize(-(w - m.l - m.r)))
-      .call(s => s.select('.domain').remove()).call(s => s.selectAll('.tick line').attr('stroke-opacity', 0.6));
-    const c = opciones.color || css('--accent');
-    if (opciones.barras) {
-      svgSel.append('g').selectAll('rect').data(vals).join('rect')
-        .attr('x', p => x(p.i) - 3).attr('width', 6).attr('y', p => yy(Math.max(0, p.v))).attr('height', p => Math.abs(yy(p.v) - yy(0)))
-        .attr('fill', p => p.i === hora ? c : css('--border')).attr('rx', 1.5);
-      return;
-    }
-    svgSel.append('path').datum(vals).attr('fill', c).attr('fill-opacity', 0.14)
-      .attr('d', d3.area().x(p => x(p.i)).y0(yy(Math.max(0, yy.domain()[0]))).y1(p => yy(p.v)).curve(d3.curveMonotoneX));
-    svgSel.append('path').datum(vals).attr('fill', 'none').attr('stroke', c).attr('stroke-width', 1.8)
-      .attr('d', d3.line().x(p => x(p.i)).y(p => yy(p.v)).curve(d3.curveMonotoneX));
-    svgSel.append('line').attr('x1', x(hora)).attr('x2', x(hora)).attr('y1', m.t).attr('y2', h - m.b).attr('stroke', css('--ink')).attr('stroke-opacity', 0.35).attr('stroke-dasharray', '2 3');
-    const actual = vals.find(p => p.i === hora);
-    if (actual) svgSel.append('circle').attr('cx', x(hora)).attr('cy', yy(actual.v)).attr('r', 3.5).attr('fill', c).attr('stroke', css('--surface')).attr('stroke-width', 1.5);
-  }
-
-  function panel() {
-    document.getElementById('hora-txt').textContent = hh(hora);
-    const kp = [];
-    let serie, nombre, unidad;
+    const L = $('leyenda');
     if (modo === 'pron') {
-      const f = PRON?.sistema.f || [];
-      kp.push(['Pronóstico a las ' + hh(hora), fmt(f[hora], 0), 'MWh', `${PRON?.nodos.length ?? 0} subestaciones`]);
-      kp.push(['Total del día', fmt(d3.sum(f), 0), 'MWh', 'barras pronosticadas por el CEN']);
-      serie = f; nombre = 'Pronóstico de las barras pronosticadas'; unidad = 'MWh';
+      L.innerHTML = `<div class="t">Pronóstico de demanda</div><div class="ayuda">Altura: energía pronosticada de la hora por subestación (MWh).</div>`;
     } else {
-      const s = DATOS?.sistema || { d: [], p: [] };
-      const cob = DATOS?.cobertura || {};
-      kp.push(['Demanda a las ' + hh(hora), fmt(s.d[hora], 0), 'MWh', 'todo el sistema']);
-      kp.push(['Costo marginal medio', fmt(s.p[hora], 1), 'USD/MWh', 'ponderado por demanda']);
-      kp.push(['Energía del día', fmt(d3.sum(s.d) / 1000, 1), 'GWh', 'retiros de clientes']);
-      kp.push(['Ubicada en el mapa', cob.energia != null ? f0(cob.energia * 100) + '%' : '—', '', `${cob.barras_ubicadas ?? 0} de ${cob.barras_total ?? 0} barras`]);
-      if (modo === 'precio') { serie = s.p; nombre = 'Costo marginal medio ponderado por demanda'; unidad = 'USD/MWh'; }
-      else { serie = s.d; nombre = 'Demanda total del sistema'; unidad = 'MWh'; }
+      L.innerHTML = `<div class="t">Costo marginal (USD/MWh)</div><div class="rampa"></div>
+        <div class="ejes"><span>0</span><span>${fmt(pMax * 0.45)}</span><span>${fmt(pMax)}+</span></div>
+        <div class="ayuda">Altura: demanda de la hora por subestación (MWh). Gris: sin precio ese día.</div>`;
     }
-    document.getElementById('kpis').innerHTML = kp.map(([n, v, u, d]) =>
-      `<div class="kpi"><div class="etiqueta">${n}</div><div class="v">${v}<small>${u}</small></div><div class="n">${d}</div></div>`).join('');
-    curva(d3.select('#curva'), serie, { color: modo === 'precio' && color ? color(DATOS?.sistema.p[hora] ?? 0) : css('--accent') });
-    document.getElementById('nota-curva').textContent = `${nombre} por hora (${unidad}).`;
-    if (sel) detalle(); else ranking();
+    L.insertAdjacentHTML('beforeend', `<div class="ayuda">Arrastra con clic derecho (o dos dedos) para girar e inclinar.</div>`);
   }
+  function kpis() {
+    const s = DATOS?.sistema || {};
+    $('k-dem').textContent = fmt(modo === 'pron' ? s.f?.[hora] : s.d?.[hora]);
+    $('k-cmg').textContent = modo === 'pron' ? '—' : fmt(s.p?.[hora], 1);
+  }
+  function ponerHora(h) {
+    hora = h; $('hora').value = h; $('hora-txt').textContent = String(h).padStart(2, '0') + ':00';
+    kpis(); dibujar();
+  }
+  $('hora').addEventListener('input', (e) => { parar(); ponerHora(+e.target.value); });
+  function parar() { clearInterval(timer); timer = null; $('play').textContent = '▶'; $('play').setAttribute('aria-label', 'Reproducir las 24 horas'); }
+  $('play').addEventListener('click', () => {
+    if (timer) return parar();
+    $('play').textContent = '❚❚'; $('play').setAttribute('aria-label', 'Pausar');
+    timer = setInterval(() => ponerHora((hora + 1) % 24), 900);
+  });
 
-  function ranking() {
-    const datos = lista().filter(d => valor(d) != null);
-    let titulo, filas;
-    if (modo === 'precio') {
-      const orden = datos.slice().sort((a, b) => valor(b) - valor(a));
-      filas = orden.slice(0, 5).concat(orden.slice(-3).reverse().filter(d => !orden.slice(0, 5).includes(d)));
-      titulo = `Precios más altos y más bajos a las ${hh(hora)}`;
-    } else {
-      filas = datos.slice().sort((a, b) => valor(b) - valor(a)).slice(0, 8);
-      titulo = `${modo === 'pron' ? 'Mayor pronóstico' : 'Mayor demanda'} a las ${hh(hora)}`;
+  // ---------- datos ----------
+  async function json(url) {
+    const r = await fetch(url, { cache: 'no-cache' });
+    if (!r.ok) { const e = new Error(r.status === 503 ? 'sin-datos' : 'HTTP ' + r.status); e.status = r.status; throw e; }
+    return r.json();
+  }
+  function aviso(t, p) { $('aviso').hidden = !t; $('aviso-extra').innerHTML = ''; if (t) { $('aviso-t').textContent = t; $('aviso-p').textContent = p || ''; } }
+
+  function llenarDias() {
+    const s = $('dia');
+    const lista = modo === 'pron' ? DIAS.pronostico.map(d => ({ dia: d })) : DIAS.demanda;
+    s.innerHTML = '';
+    for (const d of lista.slice().reverse()) {
+      const o = document.createElement('option');
+      o.value = d.dia;
+      o.textContent = new Date(d.dia + 'T12:00').toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) + (d.con_precio === false ? ' (sin precio)' : '');
+      s.appendChild(o);
     }
-    const caja = document.getElementById('caja');
-    caja.className = 'bloque';
-    caja.innerHTML = `<div class="cab"><div class="etiqueta">${titulo}</div><span class="etiqueta">${modo === 'precio' ? 'USD/MWh' : 'MWh'}</span></div>
-      <div class="lista">${filas.map(d => {
-        const p = d.p?.[hora];
-        const bg = modo === 'pron' ? css('--accent') : p != null && color ? color(p) : css('--border');
-        return `<button class="fila" data-id="${d.id}"><span class="dot" style="background:${bg}"></span>
-          <span class="nombre">${esc(d.n)}<small>${esc(d.c)}</small></span><span class="val">${fmt(valor(d), 1)}</span></button>`;
-      }).join('') || '<p class="nota">Sin datos para esta hora.</p>'}</div>
-      <p class="nota" style="margin-top:8px">Toca un punto del mapa para ver su curva del día.</p>`;
-    caja.querySelectorAll('.fila').forEach(b => b.addEventListener('click', () => seleccionar(datos.find(d => d.id === +b.dataset.id), true)));
+    // Pronóstico: hoy si está; demanda: el último día con precio.
+    const hoy = new Date().toLocaleDateString('sv-SE');
+    const preferido = modo === 'pron'
+      ? (DIAS.pronostico.includes(hoy) ? hoy : null)
+      : DIAS.demanda.filter(d => d.con_precio).at(-1)?.dia;
+    if (preferido) s.value = preferido;
+    s.disabled = !lista.length;
   }
 
-  function detalle() {
-    const d = sel;
-    const caja = document.getElementById('caja');
-    caja.className = 'bloque detalle';
-    const serieD = modo === 'pron' ? d.f : d.d;
-    const reg = modo !== 'pron' && d.reg != null ? ` · ${f0(d.reg * 100)}% cliente regulado` : '';
-    caja.innerHTML = `<div class="cab"><div class="etiqueta">Subestación</div><button class="btn" id="cerrar">Volver al ranking</button></div>
-      <h2>${esc(d.n)}</h2>
-      <div class="meta">${esc([d.c, d.r].filter(Boolean).join(', '))}${reg}</div>
-      ${serieD ? `<div class="cab" style="margin-top:12px"><span class="etiqueta">${modo === 'pron' ? 'Pronóstico' : 'Demanda'} por hora</span><span class="nota">${f0(d3.sum(serieD))} MWh en el día</span></div><svg class="mini" id="mini-d"></svg>` : '<p class="nota" style="margin-top:12px">Sin retiros de clientes en esta subestación (solo precio).</p>'}
-      ${modo !== 'pron' && d.p ? `<div class="cab" style="margin-top:10px"><span class="etiqueta">Costo marginal</span><span class="nota">USD/MWh</span></div><svg class="mini" id="mini-p"></svg>` : ''}
-      <div class="barras">${(d.b || []).map(b => `<code>${esc(b)}</code>`).join('')}</div>`;
-    caja.querySelector('#cerrar').addEventListener('click', () => seleccionar(null));
-    if (serieD) curva(d3.select('#mini-d'), serieD, { barras: true });
-    if (modo !== 'pron' && d.p) curva(d3.select('#mini-p'), d.p, { color: color(d3.mean(d.p.filter(v => v != null)) ?? 0) });
-  }
-
-  function seleccionar(d, centrar = false) {
-    sel = d || null;
-    gNodos.selectAll('circle').classed('sel', n => sel && n.id === sel.id);
-    if (sel && centrar) {
-      const [x, y] = xy(sel);
-      svg.transition().duration(reducir() ? 0 : 600).call(zoom.transform, d3.zoomIdentity.translate(ancho / 2, alto / 2).scale(Math.max(k, 8)).translate(-x, -y));
-    }
-    if (sel) detalle(); else ranking();
-  }
-  svg.on('click', () => { if (sel) seleccionar(null); });
-
-  // ---------- cabecera, fecha y estado ----------
-  function subtitulo() {
-    const sub = document.getElementById('sub');
-    if (modo === 'pron') sub.innerHTML = PRON ? `Pronóstico horario del CEN para el <b>${fecha(PRON.dia)}</b>` : 'Sin pronóstico cargado';
-    else sub.innerHTML = DATOS ? `Demanda real y costo marginal del <b>${fecha(DATOS.dia)}</b> · ${DATOS.nodos.length} subestaciones` : 'Sin demanda cargada';
-  }
-
-  function selectorDias() {
-    const s = document.getElementById('dia');
-    if (!DIAS) { s.disabled = true; return; }
-    const opciones = modo === 'pron'
-      ? DIAS.pronostico.slice().reverse().map(d => [d, fecha(d, true)])
-      : DIAS.demanda.slice().reverse().map(d => [d.dia, fecha(d.dia, true) + (d.con_precio ? '' : ' (sin precio)')]);
-    const actual = modo === 'pron' ? diaPron : diaDemanda;
-    s.innerHTML = opciones.map(([v, t]) => `<option value="${v}"${v === actual ? ' selected' : ''}>${t}</option>`).join('');
-    s.disabled = EMBEBIDO != null || opciones.length < 2;
-  }
-
-  function pintarEstado() {
-    const el = document.getElementById('estado'), txt = document.getElementById('estado-txt');
-    const e = ESTADO || {};
-    el.className = 'estado';
-    if (e.en_curso) { el.classList.add('curso'); txt.textContent = `Actualizando${e.paso ? ' · ' + e.paso : ''}…`; }
-    else if (e.ok === false) { el.classList.add('error'); txt.textContent = 'La última actualización falló'; el.title = e.error || ''; }
-    else if (e.ultima_actualizacion) { el.classList.add('ok'); txt.textContent = `Actualizado ${fechaHora(e.ultima_actualizacion)}`; }
-    else txt.textContent = '';
-    if (e.ok === false && e.ultima_actualizacion) txt.textContent += ` · datos del ${fechaHora(e.ultima_actualizacion)}`;
-  }
-
-  function aviso(titulo, texto) {
-    const a = document.getElementById('aviso');
-    a.hidden = !titulo;
-    if (titulo) { document.getElementById('aviso-t').textContent = titulo; document.getElementById('aviso-p').textContent = texto || ''; }
-  }
-
-  async function cargarDemanda(dia) {
-    DATOS = await api('api/mapa' + (dia ? `?dia=${dia}` : ''));
-    diaDemanda = DATOS.dia;
-  }
-  async function cargarPron(dia) {
-    try { PRON = await api('api/pronostico' + (dia ? `?dia=${dia}` : '')); diaPron = PRON.dia; }
-    catch (e) { if (e.status !== 503) throw e; PRON = null; }
-  }
-
-  function refrescarVista() {
-    if (sel) sel = lista().find(n => n.id === sel.id) || null;
-    escalas(); subtitulo(); selectorDias(); leyenda(); dibujar();
-  }
-
-  async function cargarTodo(mantenerDias = false) {
-    DIAS = await api('api/dias');
-    const conPrecio = DIAS.demanda.filter(d => d.con_precio).map(d => d.dia);
-    const defDem = conPrecio[conPrecio.length - 1] || DIAS.demanda[DIAS.demanda.length - 1]?.dia;
-    const disponibles = new Set(DIAS.demanda.map(d => d.dia));
-    await cargarDemanda(mantenerDias && disponibles.has(diaDemanda) ? diaDemanda : defDem);
-    const defPron = DIAS.pronostico[DIAS.pronostico.length - 1];
-    await cargarPron(mantenerDias && DIAS.pronostico.includes(diaPron) ? diaPron : defPron);
-  }
-
-  let versionCargada = null;
-  async function vigilar() {
-    // Revisa el estado del servidor; si publicó datos nuevos, los recarga sin perder la vista.
+  async function cargarDia() {
+    const dia = $('dia').value;
+    if (!dia) return;
+    aviso('Cargando', dia);
     try {
-      ESTADO = await api('api/estado');
-      pintarEstado();
-      if (!ESTADO.hay_datos) {
-        aviso('Preparando datos', ESTADO.en_curso
-          ? `Primera actualización en curso${ESTADO.paso ? ': ' + ESTADO.paso : ''}. Puede tardar varios minutos.`
-          : (ESTADO.error ? 'La actualización falló: ' + ESTADO.error.split('\n')[0] : 'Esperando la primera actualización.'));
-      } else if (ESTADO.ultima_actualizacion !== versionCargada) {
-        await cargarTodo(versionCargada !== null);
-        versionCargada = ESTADO.ultima_actualizacion;
-        aviso(null);
-        refrescarVista();
-      }
+      DATOS = await json(modo === 'pron' ? `api/pronostico?dia=${dia}` : `api/mapa?dia=${dia}`);
+      const precios = DATOS.nodos.flatMap(n => n.p || []).filter(v => v != null).sort((a, b) => a - b);
+      pMax = Math.max(60, precios[Math.floor(precios.length * 0.97)] || 120);
+      dMax = Math.max(1, ...DATOS.nodos.flatMap(n => serie(n) || []).filter(v => v != null));
+      $('sub').textContent = (modo === 'pron' ? 'Pronóstico CEN · ' : 'Demanda real CEN · ') +
+        new Date(dia + 'T12:00').toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' });
+      $('sub').insertAdjacentHTML('beforeend', ` <span class="atraso">· ${atraso(dia)}</span>`);
+      sel = null; aviso(null); leyenda(); kpis(); dibujar();
     } catch (e) {
-      if (!DATOS) aviso('No se pudo cargar', e.message);
+      aviso('No pude cargar ese día', e.message);
     }
-    const espera = ESTADO?.en_curso || !ESTADO?.hay_datos ? 15000 : 120000;
-    setTimeout(vigilar, espera);
+  }
+  $('dia').addEventListener('change', cargarDia);
+  // «hace 55 días», «hoy», «mañana»: la demanda real llega con ~2 meses de atraso y conviene decirlo.
+  function atraso(dia) {
+    const hoy = new Date(); hoy.setHours(12, 0, 0, 0);
+    const d = Math.round((hoy - new Date(dia + 'T12:00')) / 864e5);
+    if (d === 0) return 'hoy';
+    if (d === 1) return 'ayer';
+    if (d === -1) return 'mañana';
+    return d > 0 ? `hace ${d} días` : `en ${-d} días`;
   }
 
-  // ---------- controles ----------
+  function ponerModo(m) {
+    modo = m;
+    document.querySelectorAll('[data-modo]').forEach(x => x.setAttribute('aria-selected', x.dataset.modo === m));
+  }
   document.querySelectorAll('[data-modo]').forEach(b => b.addEventListener('click', () => {
-    modo = b.dataset.modo;
-    document.querySelectorAll('[data-modo]').forEach(x => x.setAttribute('aria-selected', x === b ? 'true' : 'false'));
-    refrescarVista();
+    if (modo === b.dataset.modo || b.disabled) return;
+    ponerModo(b.dataset.modo);
+    llenarDias(); cargarDia();
   }));
-  document.getElementById('dia').addEventListener('change', async (e) => {
-    const s = e.target; s.disabled = true;
-    try { modo === 'pron' ? await cargarPron(s.value) : await cargarDemanda(s.value); refrescarVista(); }
-    catch (err) { aviso('No se pudo cargar el día', err.message); setTimeout(() => aviso(null), 4000); }
-    finally { s.disabled = false; }
-  });
-  const rango = document.getElementById('hora');
-  rango.addEventListener('input', () => { hora = +rango.value; dibujar(); });
-  const play = document.getElementById('play');
-  play.addEventListener('click', () => {
-    if (timer) { clearInterval(timer); timer = null; play.textContent = '▶'; play.setAttribute('aria-label', 'Reproducir las 24 horas'); return; }
-    play.textContent = '❚❚'; play.setAttribute('aria-label', 'Pausar');
-    timer = setInterval(() => { hora = (hora + 1) % 24; rango.value = hora; dibujar(); }, 650);
-  });
-  const tema = () => { escalas(); leyenda(); dibujar(); };
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', tema);
-  new MutationObserver(tema).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
-  // ---------- arranque ----------
-  function montarBase() {
-    gPaises.selectAll('path').data(BASE.features).join('path').attr('class', d => 'pais ' + d.properties.iso);
-    new ResizeObserver(() => { const primera = !ancho; ajustar(); if (primera) irA('todo', false); dibujar(); }).observe(svg.node());
+  // Vista rápida del primer arranque: el servidor publica primero solo el pronóstico (~1 min)
+  // y después la demanda real con precios. Mientras tanto se muestra el pronóstico con un aviso.
+  let vistaRapida = false;
+  function revisarVistaRapida() {
+    const sinDemanda = !DIAS.demanda.length;
+    const tab = document.querySelector('[data-modo=demanda]');
+    tab.disabled = sinDemanda;
+    tab.title = sinDemanda ? 'La demanda real todavía se está descargando' : '';
+    if (sinDemanda && !vistaRapida) { vistaRapida = true; ponerModo('pron'); }
+    if (!sinDemanda && vistaRapida) { vistaRapida = false; ponerModo('demanda'); }
+    if (!vistaRapida) $('nota').hidden = true;
+  }
+  function pintarNota(e) {
+    if (!vistaRapida) return;
+    const min = e?.transcurrido_s != null ? Math.floor(e.transcurrido_s / 60) : null;
+    $('nota').hidden = false;
+    $('nota').innerHTML = '<b>Vista rápida:</b> pronóstico del CEN para hoy y mañana. La demanda real y los precios se están descargando y el mapa cambiará solo al terminar.<span class="det"></span>';
+    $('nota').querySelector('.det').textContent = e?.en_curso
+      ? [e.pasos_total ? `Paso ${e.paso_n} de ${e.pasos_total}` : null, e.paso, e.detalle, min != null ? `${min} min` : null].filter(Boolean).join(' · ')
+      : (e?.error ? 'La descarga falló; se reintentará en la próxima actualización.' : '');
   }
 
   async function iniciar() {
-    if (EMBEBIDO) {
-      ({ mapa: DATOS, pron: PRON, base: BASE, dias: DIAS, estado: ESTADO } = EMBEBIDO);
-      diaDemanda = DATOS?.dia; diaPron = PRON?.dia;
-      montarBase(); pintarEstado(); refrescarVista();
-      return;
+    try {
+      DIAS = await json('api/dias');
+      if (!DIAS.demanda.length && !DIAS.pronostico.length) throw Object.assign(new Error('sin-datos'), { status: 503 });
+      revisarVistaRapida();
+      llenarDias(); await cargarDia();
+      if (vistaRapida) pintarNota(await json('api/estado').catch(() => null));
+    } catch (e) {
+      if (e.status === 503) {
+        // Sin datos todavía: muestra el avance de la actualización y vuelve a intentar.
+        const est = await json('api/estado').catch(() => null);
+        aviso('Preparando datos', 'Primera carga: se descarga una muestra del Coordinador Eléctrico Nacional (unos 10 minutos). La página se actualiza sola.');
+        window.NodosAmpliar?.espera($('aviso-extra'), est);
+        setTimeout(iniciar, est?.en_curso ? 5000 : 15000);
+      } else aviso('No pude cargar los datos', e.message);
     }
-    try { BASE = await api('api/base'); }
-    catch (e) { aviso('No se pudo cargar el mapa base', e.message); return; }
-    montarBase();
-    leyenda();
-    vigilar();
   }
+
+  paleta();
+  leyenda();
+  map.on('load', () => irA('todo', false));
   iniciar();
+
+  // Cuando el servidor publica datos nuevos (p. ej. tras pedir más historia), se recargan los días
+  // conservando el día y la hora elegidos.
+  async function recargar() {
+    const dia = $('dia').value;
+    try {
+      DIAS = await json('api/dias');
+      const antes = modo;
+      revisarVistaRapida();
+      llenarDias();
+      if (modo === antes && [...$('dia').options].some(o => o.value === dia)) $('dia').value = dia;
+      await cargarDia();
+    } catch (e) { /* se reintenta en la próxima publicación */ }
+  }
+  window.NodosAmpliar?.montar($('mas-datos'), { alActualizar: recargar, alEstado: pintarNota });
 })();
 </script>
 </body>

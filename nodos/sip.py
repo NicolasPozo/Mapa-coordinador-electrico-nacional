@@ -43,6 +43,8 @@ class ClienteSIP:
         self._ultima = 0.0
         self._bases: dict[str, int] = {}
         self.peticiones = 0
+        # Opcional: función (dia, pagina, total) que se llama tras cada página (avance en la web).
+        self.al_avanzar = None
 
     # -- utilidades ---------------------------------------------------------
 
@@ -95,7 +97,7 @@ class ClienteSIP:
                 time.sleep(pausa)
                 continue
             if r.status_code in (401, 403):
-                raise ErrorSIP(
+                raise ErrorClave(
                     f"{r.status_code}: la clave no tiene acceso a {ruta}. "
                     "Revisa que tu cuenta esté suscrita al plan SIP."
                 )
@@ -131,6 +133,7 @@ class ClienteSIP:
         limite = LIMITE_POR_PAGINA
         pagina = base
         total_paginas = None
+        fallos = 0  # 502/504 seguidos con el tamaño actual
         while total_paginas is None or pagina < base + total_paginas:
             params = {
                 "startDate": dia.isoformat(),
@@ -141,6 +144,15 @@ class ClienteSIP:
             try:
                 datos = self._get(endpoint.ruta, params)
             except _PaginaGrande:
+                # Un 502/504 puede ser una caída breve del CEN y no la página: primero se
+                # espera y se reintenta igual; si sigue fallando, se achica la página.
+                fallos += 1
+                if fallos <= 2:
+                    pausa = 20 * fallos
+                    print(f"    ! {endpoint.alias} respondió 502/504; reintento en {pausa}s")
+                    time.sleep(pausa)
+                    continue
+                fallos = 0
                 if limite // 2 < LIMITE_MINIMO:
                     raise ErrorSIP(f"El servidor falla incluso con páginas de {limite} filas")
                 # Las páginas anteriores venían llenas, así que las filas ya bajadas
@@ -150,6 +162,7 @@ class ClienteSIP:
                 total_paginas = None
                 print(f"    ! 502 con página grande; bajo a {limite} filas por página")
                 continue
+            fallos = 0
             lote = datos.get("data") or []
             total_paginas = int(datos.get("totalPages") or 0)
             indice = pagina - base + 1
@@ -159,12 +172,18 @@ class ClienteSIP:
             filas.extend(lote)
             if total_paginas > 1:
                 print(f"    página {indice}/{total_paginas}")
+            if self.al_avanzar:
+                self.al_avanzar(dia, indice, total_paginas)
             pagina += 1
         return pd.DataFrame.from_records(filas)
 
 
 class _PaginaGrande(Exception):
     pass
+
+
+class ErrorClave(ErrorSIP):
+    """401/403: la clave no sirve; no tiene sentido seguir con otros endpoints."""
 
 
 # -- caché en disco -----------------------------------------------------------
@@ -214,7 +233,7 @@ def descargar_rango(
     for dia in dias(desde, hasta):
         destino = ruta_cache(endpoint, dia)
         if destino.exists() and not refrescar:
-            if es_definitivo(endpoint, dia, destino):
+            if es_definitivo(endpoint, dia, destino) or _reciente(endpoint, destino):
                 resumen["en_cache"] += 1
                 continue
             print(f"  {endpoint.alias} {dia} (provisional, se actualiza) ...")
@@ -240,6 +259,13 @@ def es_definitivo(endpoint: Endpoint, dia: date, archivo: Path) -> bool:
     """El archivo es definitivo si se descargó cuando ya había pasado el margen del día."""
     descargado = date.fromtimestamp(archivo.stat().st_mtime)
     return descargado > dia + timedelta(days=endpoint.margen_dias)
+
+
+def _reciente(endpoint: Endpoint, archivo: Path) -> bool:
+    """Un provisional bajado hace menos de endpoint.refresco_horas todavía no se vuelve a pedir."""
+    if endpoint.refresco_horas <= 0:
+        return False
+    return time.time() - archivo.stat().st_mtime < endpoint.refresco_horas * 3600
 
 
 def leer_cache(endpoint: Endpoint, desde: date | None = None, hasta: date | None = None) -> pd.DataFrame:

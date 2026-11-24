@@ -7,7 +7,6 @@
 .venv/
 .venv-dbt/
 data/
-salida/
 **/__pycache__/
 *.pyc
 

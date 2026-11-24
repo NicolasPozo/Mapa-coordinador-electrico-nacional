@@ -39,3 +39,9 @@ sources:
           (por id, por nombre con abreviaturas y manual desde ubicaciones_manuales.csv).
         meta:
           external_location: "read_parquet('{{ env_var('NODOS_RAIZ', '..') }}/data/processed/nodos.parquet')"
+      - name: coordenadas_subestaciones
+        description: >
+          Coordenadas de cada subestación desde su ficha técnica (UTM -> lat/lon), también las que
+          solo aparecen en el pronóstico. Respaldo de dim_subestacion cuando no hay barra del SIP.
+        meta:
+          external_location: "read_parquet('{{ env_var('NODOS_RAIZ', '..') }}/data/processed/coordenadas_subestaciones.parquet')"

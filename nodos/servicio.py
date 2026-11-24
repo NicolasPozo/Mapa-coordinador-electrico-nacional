@@ -37,14 +37,24 @@ def _r(v, dec):
     return None if v is None else round(float(v), dec)
 
 
+def _tablas(con) -> set[str]:
+    """Tablas del esquema modelo. La vista rápida del primer arranque solo trae el pronóstico."""
+    return {r[0] for r in con.execute(
+        "select table_name from information_schema.tables where table_schema = 'modelo'").fetchall()}
+
+
+def _dias(con, tabla: str, tablas: set[str]) -> list[str]:
+    if tabla not in tablas:
+        return []
+    return [r[0].isoformat() for r in con.execute(f"select distinct dia from modelo.{tabla} order by dia").fetchall()]
+
+
 def dias_disponibles() -> dict:
     with conexion() as con:
-        demanda = [r[0].isoformat() for r in con.execute(
-            "select distinct dia from modelo.fct_demanda_horaria order by dia").fetchall()]
-        cmg = {r[0].isoformat() for r in con.execute(
-            "select distinct dia from modelo.fct_cmg_horario").fetchall()}
-        pron = [r[0].isoformat() for r in con.execute(
-            "select distinct dia from modelo.fct_pronostico_horario order by dia").fetchall()]
+        tablas = _tablas(con)
+        demanda = _dias(con, "fct_demanda_horaria", tablas)
+        cmg = set(_dias(con, "fct_cmg_horario", tablas))
+        pron = _dias(con, "fct_pronostico_horario", tablas)
     return {
         "demanda": [{"dia": d, "con_precio": d in cmg} for d in demanda],
         "solo_precio": sorted(cmg - set(demanda)),
@@ -55,6 +65,8 @@ def dias_disponibles() -> dict:
 def datos_dia(dia: date) -> dict:
     """Subestaciones con demanda y costo marginal por hora, más los totales del sistema."""
     with conexion() as con:
+        if "mart_subestacion_horaria" not in _tablas(con):
+            raise SinDatos("La demanda real todavía se está descargando.")
         filas = con.execute(
             """
             select id_subestacion, subestacion, comuna, region, lat, lon, hora,

@@ -6,6 +6,7 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     DBT_SEND_ANONYMOUS_USAGE_STATS=False \
+    TZ=America/Santiago \
     NODOS_HOST=0.0.0.0 \
     NODOS_PORT=8000
 
@@ -19,6 +20,7 @@ COPY nodos/ nodos/
 COPY transform/ transform/
 COPY web/ web/
 COPY ubicaciones_manuales.csv ./
+COPY semilla/ semilla/
 
 # Usuario sin privilegios; data/ es el volumen con la caché y la base DuckDB.
 RUN useradd --create-home --uid 1000 nodos \
